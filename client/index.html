@@ -1,100 +1,222 @@
-<!doctype html>
-<html lang="en" ng-app>
+<!DOCTYPE html>
+<html>
   <head>
-    <title>Chat Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
-    <style>
-      body {
-        padding-top: 60px;
-      }
-    </style>
-    <script>
-      function ChatController($scope) {
-        var socket = io.connect();
-
-        $scope.messages = [];
-        $scope.roster = [];
-        $scope.name = '';
-        $scope.text = '';
-
-        socket.on('connect', function () {
-          $scope.setName();
-        });
-
-        socket.on('message', function (msg) {
-          $scope.messages.push(msg);
-          $scope.$apply();
-        });
-
-        socket.on('roster', function (names) {
-          $scope.roster = names;
-          $scope.$apply();
-        });
-
-        $scope.send = function send() {
-          console.log('Sending message:', $scope.text);
-          socket.emit('message', $scope.text);
-          $scope.text = '';
-        };
-
-        $scope.setName = function setName() {
-          socket.emit('identify', $scope.name);
-        };
-      }
-    </script>
+    <meta charset="utf-8">
+    <title>Avatar Guess Who</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./jquery-3.3.1.min.js" charset="utf-8"></script>
+    <script src="./script.js" charset="utf-8"></script>
+    <script src="./socket.io.min.js"></script>
+    <script src="https://use.fontawesome.com/5f4bca6e58.js"></script>
   </head>
   <body>
-    <div class="container" ng-controller="ChatController">
-      <div class="navbar navbar-fixed-top navbar-inverse">
-        <div class="navbar-inner">
-          <div class="pull-right">
-            <a href="https://c9.io" class="brand">Cloud9 IDE</a>
-          </div>
-        </div>
+    <div class="center">
+      <div class="side-menu">
+        <span id="help-button" class="side-option">
+          <i class="fa fa-question" aria-hidden="true"></i>
+        </span>
+        <br />
+        <span class="side-option">
+          <i class="fa fa-history" aria-hidden="true"></i>
+        </span>
       </div>
-      <div class="page-header">
-        <h1>Chat Example</h1>
-      </div>
-      <div class="row">
-        <div class="span3">
-          <ul class="nav nav-list well">
-            <li class="nav-header">Local Users</li>
-            <li ng-repeat="user in roster" ng-bind="user">
-            </li>
-          </ul>
-        </div>
-        <div class="span9">
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th class="span2">Name</th>
-                <th class="span7">Text</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="msg in messages">
-                <td class="span2" ng-bind="msg.name"></td>
-                <td class="span7" ng-bind="msg.text"></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="row controls">
-            <form ng-submit="send()">
-              <div class="span2"><input type="text" class="input-block-level" ng-model="name" ng-change="setName()" placeholder="Your Name"></div>
-              <div class="input-append span7">
-                <input type="text" class="span6" ng-model="text" placeholder="Message">
-                <input type="submit" class="span1 btn btn-primary" value="Send" ng-disabled="!text">
-              </div>
-            </form>
-          </div>
-        </div>
+
+      <span class="game-span">
+        <span/>
+          <span class="card">
+            <img class="card-img" src="./pics/aang.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/katara.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/sokka.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/toph.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/zuko.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/iroh.png" alt="">
+          </span>
+        </span>
+
+        <br />
+
+        <span>
+          <span class="card">
+            <img class="card-img" src="./pics/azula.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/appa.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/momo.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/admiral-zhao.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/suki.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/king-bumi.png" alt="">
+          </span>
+        </span>
+
+        <br />
+
+        <span>
+          <span class="card">
+            <img class="card-img" src="./pics/princess-yue.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/jet.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/mai.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/ty-lee.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/ozai.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/roku.png" alt="">
+          </span>
+        </span>
+
+        <br />
+
+        <span>
+          <span class="card">
+            <img class="card-img" src="./pics/cabbage-man.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/aunt-wu.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/master-pakku.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/jeong-jeong.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/combustion-man.png" alt="">
+          </span>
+          <span class="card">
+            <img class="card-img" src="./pics/joo-dee.png" alt="">
+          </span>
+        </span>
+
+        <span></span>
+
+        <br />
+        <input class="question-input" type="text" name="to-ask" placeholder=" Ask a question" value="">
+      </span>
+
+      <span class = "game-span" id = "right-game-span">
+        <span class="main-card">
+            <img class="card-img" src="./pics/katara.png" alt="">
+        </span>
+
+        <br />
+
+        <span class = "mini-board">
+          <span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+          </span>
+
+          <br />
+
+          <span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+          </span>
+
+          <br />
+
+          <span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+          </span>
+
+          <br />
+
+          <span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+            <span class="mini-card">
+            </span>
+          </span>
+
+          <br />
+
+          <button class = "fancy-button" id = "ask-button">Ask</button>
+
+        </span>
+      </span>
+    </div>
+
+    <div id = "asked" class="modal">
+      Here is my question, do you want to answer it?
+    </div>
+
+    <div id = "history" class="modal">
+    </div>
+
+    <div id = "help" class="modal">
+      Welcome to Avatar Guess Who. The goal of the game is to guess the opponent's character before they guess yours.
+      <br><br> Ask a yes or no question by typing it into the text input and clicking "ask". The answer/question will appear after your opponent answers the question. Be careful, the question and answer will not re-appear.
+      <br><br> To toggle a character as eliminated, click his or her icon. In the smaller grid, you can see what characters your opponent has currently toggled.
+      <br><br> When you're ready to guess your opponent's character, click the "guess" button. You can then click a character to guess, or click the guess button again to cancel. Be careful, if you guess wrong, you lose!
+      <br><br>
+      <div class="centerer">
+        <button id = "help-back" class="fancy-button">Back</button>
       </div>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/angular.min.js"></script>
+
   </body>
 </html>

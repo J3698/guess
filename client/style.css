@@ -1,0 +1,246 @@
+* {
+  --button-bg: rgba(255, 255, 255, 0.5);
+  --button-fg: black;
+  border-radius: 3px;
+}
+
+body {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100vw;
+
+  background-image:
+    radial-gradient(black 0%, black 20%, transparent 100%),
+      url("./pics/avatar_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size:cover;
+}
+
+button:focus {
+  outline: none;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal {
+  position: absolute;
+  visibility: hidden;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
+  margin-top: -225px;
+  width: 878px;
+  height: 450px;
+
+  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--button-bg);
+  font-size: 20px;
+
+//  text-align: center;
+//  line-height: 225px;
+}
+
+.fancy-button {
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+}
+
+.fancy-button:hover {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+.fancy-button:active {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+.side-option:hover {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+#help {
+  visibility: hidden;
+  padding: 30px;
+}
+
+#yes-button, #no-button {
+  border: none;
+  width: 100px;
+  font-size: 25px;
+  height: 40px;
+  color: var(--button-fg);
+  background-color: var(--button-bg)
+}
+
+#yes-button {
+  margin-right: 20px;
+}
+
+#yes-button:hover, #no-button:hover {
+  transform: scale(.97)
+}
+
+.center {
+  position: absolute;
+  margin: auto auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  height: 430px;
+  width: 858px;
+
+  padding: 10px;
+  border-radius: 5px;
+
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.side-menu {
+  display: inline-block;
+
+  vertical-align: top;
+
+  font-size: 0;
+}
+
+.side-option {
+  display: inline-block;
+
+  height: 42px;
+  width: 42px;
+
+  margin-bottom: 5px;
+
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+
+  font-size: 30px;
+  text-align: center;
+  line-height: 45px;
+}
+.side-option:hover {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+.card {
+  display: inline-block;
+
+  height: 90px;
+  width: 90px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  transform: scale(1);
+  z-index: 0;
+
+}
+
+.card-option-holder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}
+
+.card-option {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  font-size: 15px;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.card-confirm {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.card-confirm:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.card:hover {
+  transform: scale(0.95);
+  z-index: 5;
+}
+
+.mini-card {
+  display: inline-block;
+
+  height: 33px;
+  width: 33px;
+
+  background-color: rgba(150, 150, 150, 0.5);
+}
+
+.main-card {
+  display: inline-block;
+  height: 220px;
+  width: 228px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card-img {
+  height: inherit;
+  width: inherit;
+}
+
+.pushed-down {
+  transform: scale(0.8);
+}
+
+.mini-board {
+  font-size: 20px;
+}
+
+.question-input {
+  width: 560px;
+  height: 52px;
+
+  font-size: 50px;
+
+  border: none;
+
+  background-color: var(--button-bg);;
+}
+
+.game-span {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  height: 600px;
+  top: 0;
+}
+
+#right-game-span {
+  padding-left: 10px;
+
+  width: 230px;
+}
+
+.centerer {
+  text-align: center;
+}
+
+#ask-button {
+  width: 230px;
+  height: 52px;
+  font-size: 25px;
+}
+
+.query-button:hover {
+  transform: scale(0.97);
+}
