@@ -15,12 +15,7 @@
         <span id="help-button" class="side-option">
           <i class="fa fa-question" aria-hidden="true"></i>
         </span>
-        <br />
-        <span class="side-option">
-          <i class="fa fa-history" aria-hidden="true"></i>
-        </span>
       </div>
-
       <span class="game-span">
         <span/>
           <span class="card">
@@ -115,29 +110,28 @@
         <span></span>
 
         <br />
-        <input class="question-input" type="text" name="to-ask" placeholder=" Ask a question" value="">
+        <input class="question-input" type="text" name="to-ask" placeholder="  Ask a question" value="">
       </span>
 
       <span class = "game-span" id = "right-game-span">
         <span class="main-card">
-            <img class="card-img" src="./pics/katara.png" alt="">
+            <img class="card-img" src="./pics/select.png" alt="">
         </span>
 
         <br />
 
+        <!-- 
+          IMPORTANT: Spacing between closing and opening mini-card tags is
+          purposely omitted to avoid spacing issues
+        -->
         <span class = "mini-board">
           <span>
             <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card" style="margin-right:0">
             </span>
           </span>
 
@@ -145,16 +139,11 @@
 
           <span>
             <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card" style="margin-right:0">
             </span>
           </span>
 
@@ -162,16 +151,11 @@
 
           <span>
             <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card" style="margin-right:0">
             </span>
           </span>
 
@@ -179,16 +163,11 @@
 
           <span>
             <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
-            </span>
-            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card" style="margin-right:0">
             </span>
           </span>
 
@@ -200,11 +179,15 @@
       </span>
     </div>
 
-    <div id = "asked" class="modal">
-      Here is my question, do you want to answer it?
+    <div id = "asked" class="modal centerer">
+      <p id = "asked-text">Here is my question, do you want to answer it?</p>
+        <button id = "ask-yes" class="fancy-button">Yes</button>
+        <button id = "ask-no" class="fancy-button">No</button>
     </div>
 
-    <div id = "history" class="modal">
+    <div id = "select" class="modal centerer">
+      <p>Select Your Character</p>
+      
     </div>
 
     <div id = "help" class="modal">
@@ -217,6 +200,5 @@
         <button id = "help-back" class="fancy-button">Back</button>
       </div>
     </div>
-
   </body>
 </html>
