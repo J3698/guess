@@ -9,13 +9,13 @@ body {
   overflow-x: hidden;
   height: 100vh;
   width: 100vw;
-
   background-image:
     radial-gradient(black 0%, black 20%, transparent 100%),
       url("./pics/avatar_bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size:cover;
+  //background: #000;
 }
 
 button:focus {
@@ -54,6 +54,9 @@ button:focus {
   border: none;
   background-color: var(--button-bg);
   color: var(--button-fg);
+  width: 128px;
+  height: 45px;
+  font-size: 30px;
 }
 
 .fancy-button:hover {
@@ -69,6 +72,7 @@ button:focus {
 #help {
   visibility: hidden;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 #yes-button, #no-button {
@@ -142,6 +146,28 @@ button:focus {
   transform: scale(1);
   z-index: 0;
 
+}
+
+#select-text {
+  color: white;
+}
+
+.card-select {
+  display: inline-block;
+
+  height: 85px;
+  width: 85px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  transform: scale(1);
+  z-index: 0;
+
+}
+
+.card-select:hover {
+  transform: scale(0.95);
+  z-index: 5;
 }
 
 .card-option-holder {
@@ -240,6 +266,7 @@ button:focus {
   width: 230px;
   height: 52px;
   font-size: 25px;
+  margin-top: 4px;
 }
 
 .query-button:hover {
