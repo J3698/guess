@@ -30,6 +30,8 @@ function askQ() {
   $("#asked-text").text("Waiting for the other player to ask their question...");
   $("#answered-text").text("Waiting for the other player to answer your question...");
   $("#asked").css("visibility", "visible");
+  $("#ask-yes").css("visibility", "hidden");
+  $("#ask-no").css("visibility", "hidden");
   console.log("You Asked: " + q);
   el.val("");
   askServer(q);
@@ -57,7 +59,8 @@ function addDeleteListener() {
     if(numRemoved == 24){
       alert("Why would you remove all of them =.=");
     }
-    removeServer(name)
+    removeServer(name);
+    document.getElementById("to-ask").focus();
   });
 }
 
@@ -130,6 +133,7 @@ function setupCardSelectGUI(){
       console.log("You Picked: " + currName);
       $(".main-card").find(".card-img").attr('src',"./client/pics/" + currName + ".png");
       selectServer(currName);
+      document.getElementById("to-ask").focus();
     });
   });
 }
@@ -154,17 +158,25 @@ function startSideBar() {
   });
   $("#ask-yes").click(function() {
     $("#asked").css("visibility", "hidden");
+    $("#ask-yes").css("visibility", "hidden");
+    $("#ask-no").css("visibility", "hidden");
     answerServer('yes');
     $("#answered").css("visibility", "visible");
+    $("#answered-back").css("visibility", "hidden");
   });
   $("#ask-no").click(function() {
     $("#asked").css("visibility", "hidden");
+    $("#ask-yes").css("visibility", "hidden");
+    $("#ask-no").css("visibility", "hidden");
     answerServer('no');
     $("#answered").css("visibility", "visible");
+    $("#answered-back").css("visibility", "hidden");
   });
   $("#answered-back").click(function() {
     $("#answered").css("visibility", "hidden");
+    $("#answered-back").css("visibility", "hidden");
     $("#answered-back").prop('disabled', true);
+    document.getElementById("to-ask").focus();
   });
 }
 
@@ -172,9 +184,14 @@ function startSideBar() {
 $(document).ready(function() {
   $("#ask-button").click(askQ);
   $("#select").css("visibility", "visible");
+  $('#to-ask').keypress(function(e){
+    if(e.keyCode==13)
+    $('#ask-button').click();
+  });
   startCards();
   startSideBar()
   initIO();
+  
 });
 
 var GAME_STATE = Object.freeze({
@@ -194,12 +211,16 @@ function initIO() {
 
     socket.on(IO_EVTS.ASK, function(data) {
       $("#asked-text").text(data);
+      $("#ask-yes").css("visibility", "visible");
+      $("#ask-no").css("visibility", "visible");
     });
     
     socket.on(IO_EVTS.ANSWER, function(data) {
       console.log(data);
       $("#answered-text").text(data);
       $("#answered-back").prop('disabled', false);
+      $("#answered-back").css("visibility", "visible");
+
     });
 
     socket.on(IO_EVTS.REMOVE, function(data) {
@@ -210,7 +231,7 @@ function initIO() {
 
     socket.on(IO_EVTS.WIN_STATE, function(data) {
       console.log(data);
-      
+      //initFireworks();
       $("#winpage").css("visibility", "visible");
       alert(data);
       //change later

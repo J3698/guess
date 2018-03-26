@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="./client/style.css">
     <script src="./client/jquery-3.3.1.min.js" charset="utf-8"></script>
     <script src="./client/script.js" charset="utf-8"></script>
+    <script src="./client/firework.js" charset="utf-8"></script>
     <script src="./client/socket.io.min.js"></script>
     <script src="https://use.fontawesome.com/5f4bca6e58.js"></script>
   </head>
   <body>
-    <div class="center">
+    <div id="center">
       <div class="side-menu">
         <span id="help-button" class="side-option">
           <i class="fa fa-question" aria-hidden="true"></i>
@@ -54,7 +55,7 @@
         </span>
         <span></span>
         <br />
-        <input class="question-input" type="text" id="to-ask" placeholder="  Ask a question" value="">
+        <input class="question-input" type="text" id="to-ask" placeholder="  Ask a question" value="" autofocus>
       </span>
       <span class = "game-span" id = "right-game-span">
         <span class="main-card">
@@ -172,7 +173,7 @@
         <button id = "answered-back" class="fancy-button" disabled>Done</button>
     </div>
     <div id = "winpage" class="modal centerer">
-      
+    <canvas></canvas>
     </div>
     </div>
   </body>

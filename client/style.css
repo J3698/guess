@@ -92,7 +92,7 @@ button:focus {
   transform: scale(.97)
 }
 
-.center {
+#center {
   position: absolute;
   margin: auto auto;
   top: 0;
@@ -100,11 +100,12 @@ button:focus {
   right: 0;
   left: 0;
 
-  height: 430px;
-  width: 858px;
+  height: 38.43vw;
+  width: 76.7vw;
 
-  padding: 10px;
+  padding: 0.9vw;
   border-radius: 5px;
+  font-size:0;
 
   background: rgba(0, 0, 0, 0.5);
 }
@@ -120,10 +121,10 @@ button:focus {
 .side-option {
   display: inline-block;
 
-  height: 42px;
-  width: 42px;
+  height: 3.76vw;
+  width: 3.76vw;
 
-  margin-bottom: 5px;
+  margin-bottom: 0.45vw;
 
   background-color: var(--button-bg);
   color: var(--button-fg);
@@ -138,8 +139,8 @@ button:focus {
 .card {
   display: inline-block;
 
-  height: 90px;
-  width: 90px;
+  height: 8.05vw;
+  width: 8.05vw;
 
   background-color: rgba(0, 0, 0, 0.5);
 
@@ -205,18 +206,18 @@ button:focus {
 .mini-card {
   display: inline-block;
 
-  height: 33px;
-  width: 33px;
+  height:2.85vw;
+  width: 2.85vw;
 
-  margin-right: 6px;
+  margin-right: .6vw;
 
   background-color: rgba(150, 150, 150, 0.5);
 }
 
 .main-card {
   display: inline-block;
-  height: 220px;
-  width: 228px;
+  height: 19.7vw;
+  width: 20.2vw;
 
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -231,12 +232,12 @@ button:focus {
 }
 
 .mini-board {
-  font-size: 20px;
+  font-size: .2vw;
 }
 
 .question-input {
-  width: 560px;
-  height: 52px;
+  width: 50.04vw;
+  height: 4.65vw;
 
   font-size: 50px;
 
@@ -263,10 +264,10 @@ button:focus {
 }
 
 #ask-button {
-  width: 230px;
-  height: 52px;
+  width: 20.56vw;
+  height: 4.65vw;
   font-size: 25px;
-  margin-top: 4px;
+  margin-top: 0.8vw;
 }
 
 .query-button:hover {

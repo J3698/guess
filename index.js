@@ -33,6 +33,7 @@ function pairClient(socket) {
                 var pair = queue.shift();
                 var game = new Game(pair, socket);
                 games.add(game);
+                console.log('paired randomly');
             } else {
                 queue.push(socket);
             }
@@ -49,6 +50,7 @@ function pairClient(socket) {
                 var game = new Game(urlPairedGames[data], socket);
                 games.add(game);
                 urlPairedGames[data] = 0;
+                console.log('paired at ' + data);
             }
         }
     });

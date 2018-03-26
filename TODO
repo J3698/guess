@@ -1,47 +1,42 @@
 v1.0:
--Server Hardening       []
+-Server Hardening           [x]
     The server should be impervious to data
     and event hacks
--Question Asking        [x]
+-Question Asking            [x]
     There should be a functional and aesthetic
     question asking UI
--Hide Btns When Waiting []
--Question Answering     [x]
+-Hide Btns When Waiting     [x]
+-Question Answering         [x]
     There should be a functional and aesthetic
     question answering UI
--Gameover Functionality []
+-Gameover Functionality     []
     Upon losing or winning, users should be
     greeted with a friendly gameover UI
-    -New Game           []
+    -New Game               []
         Upon finishing a game,
         users should be able
         to matchmake
-    -Rematch            []
+    -Rematch                []
         Upon finishing a game,
         users should be able
         to easily rematch the
         opponent.
-    -Fireworks          []
-    -Can't win and lose []
-    -Show main cards    []
--Matchmaking option     []
+    -Fireworks              [x]
+    -Can't win and lose     [x]
+    -Reveal main cards      []
+    -Say How It Ended       []
+    -Full Screen Canvas     []
+-Matchmaking option         []
     Upon visiting guess url, users should
     be given the choice of entering a random
     match or creating a game to play with a
     friend.
--Give anita tic tacs    [x]
-    
--Give antioch 1 kiss    [x]
-
--Give anita 1 hand hold []
-
--Give antioch 1 fist bump 
--Submit Q on Enter      []
--Loading Screen         []
--Timer                  []
--Yes/No/Done Placement  []
--Chat box               []
--CSS Units              []
-    -Aspect Ration Test []
-    -Change px to vw    []
--Select after pair      []
+-Submit Q on Enter          [x]
+-Loading Screen             []
+-Yes/No/Done Placement      []
+-Chat box                   []
+-CSS Units                  []
+    -Aspect Ration Test     []
+    -Change px to vw        []
+-Select after pair          []
+-Ask Button Align           [x]
