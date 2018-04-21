@@ -18,7 +18,15 @@ var names = ["aang", "katara", "sokka", "toph", "zuko", "iroh", "azula",
              "princess-yue", "jet", "mai", "ty-lee", "ozai", "roku",
              "cabbage-man", "aunt-wu", "master-pakku", "jeong-jeong",
              "combustion-man", "joo-dee"];
-var baseURL = "https://guess-j3698.c9users.io/"
+
+var baseURL;
+a = window.location.href;
+var b = a.substr(a.lastIndexOf("."));
+if (b.includes("/")) {
+	baseURL = a.substr(0, a.lastIndexOf("/") + 1);
+} else {
+	baseURL = a + "/";
+}
 
 var numRemoved = 0;
 var removed = [];
