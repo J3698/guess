@@ -23,7 +23,7 @@ var baseURL = "https://guess-j3698.c9users.io/"
 var numRemoved = 0;
 var removed = [];
 var socket;
-
+var endText = "";
 function askQ() {
   var el = $("#to-ask");
   var q = el.val();
@@ -36,7 +36,22 @@ function askQ() {
   el.val("");
   askServer(q);
 }
-
+function chatM(){
+  var el = $("#chat-input");
+  var q = el.val();
+  console.log("You chatted: " + q);
+  el.val("");
+  chatServer(q);
+}
+function rematch(){
+  var a = $("#rematch").text();
+  if(a == "Rematch"){
+    $("#rematch").text("Cancel");
+  } else {
+    $("#rematch").text("Rematch");
+  }
+  rematchServer();
+}
 function findCardName(card) {
   return card.find(".card-img")[0].src.split("/").pop().split(".").shift();
 }
@@ -129,6 +144,7 @@ function setupCardSelectGUI(){
   $(".card-select").each(function(index, el) {
     $(el).click(function(event) {
       $("#select").css("visibility", "hidden");
+      $("#selecting").css("visibility", "visible");
       var currName = findCardName($(el));
       console.log("You Picked: " + currName);
       $(".main-card").find(".card-img").attr('src',"./client/pics/" + currName + ".png");
@@ -183,15 +199,26 @@ function startSideBar() {
 // $(window).on("load", handler)
 $(document).ready(function() {
   $("#ask-button").click(askQ);
-  $("#select").css("visibility", "visible");
+  $("#waiting").css("visibility", "visible");
   $('#to-ask').keypress(function(e){
-    if(e.keyCode==13)
-    $('#ask-button').click();
+    if (e.keyCode==13) {
+      $('#ask-button').click();
+    }
   });
+  $('#chat-input').keypress(function(e){
+    if (e.keyCode == 13) {
+      chatM();
+    }
+  });
+  $("#rematch").click(rematch);
   startCards();
-  startSideBar()
+  startSideBar();
+});
+
+$(window).on("load", function() {
+  console.log("hiding loadscreen");
   initIO();
-  
+  $("#loading").css("visibility", "hidden");
 });
 
 var GAME_STATE = Object.freeze({
@@ -231,12 +258,45 @@ function initIO() {
 
     socket.on(IO_EVTS.WIN_STATE, function(data) {
       console.log(data);
-      //initFireworks();
+      // winpage visible
       $("#winpage").css("visibility", "visible");
-      alert(data);
-      //change later
+      $("#winmodal").css("visibility", "visible");
+      // reveal cards image
+      var own = $($($(".reveal-card")[0]).find(".card-img"))[0];
+      var other = $($($(".reveal-card")[1]).find(".card-img"))[0];
+      $(own).attr("src", "./client/pics/" + data[1] + ".png");
+      $(other).attr("src", "./client/pics/" + data[2] + ".png");
+      // reveal cards text
+      var ownText = $($($(".reveal-card")[0]).find("p"))[0];
+      var otherText = $($($(".reveal-card")[1]).find("p"))[0];
+      $(ownText).text("You chose " + data[1]);
+      $(otherText).text("Opponent chose " + data[2]);
+      $("#game-over-text").text(data[3]);
+      endText = data[3];
     });
-};
+    socket.on(IO_EVTS.CHAT, function(data) {
+      var chatbox = document.getElementById("chat-contents");
+      var element = document.createElement("div");
+      element.appendChild(document.createTextNode(data));
+      element.id = "chat-message";
+      chatbox.appendChild(element);
+    });
+    socket.on(IO_EVTS.PAIR_COMPLETE, function() {
+      $("#waiting").css("visibility", "hidden");
+      $("#select").css("visibility", "visible");
+    });
+    socket.on(IO_EVTS.SELECT_COMPLETE, function() {
+      $("#selecting").css("visibility", "hidden");
+    });
+    socket.on(IO_EVTS.REMATCH, function(data) {
+      console.log("rematch thing");
+      if(data == "request"){
+        $("#game-over-text").text(endText + " Your friend is requesting a rematch!");
+      } else {
+        $("#game-over-text").text(endText + " Request has been cancelled.");
+      }
+    });
+}
 
 // enums
 var IO_EVTS = Object.freeze({
@@ -246,7 +306,11 @@ var IO_EVTS = Object.freeze({
   SELECT: 'select',
   ASK: 'ask',
   ANSWER: 'answer',
-  WIN_STATE: 'win_state'
+  WIN_STATE: 'win_state',
+  CHAT: 'chat',
+  PAIR_COMPLETE: 'pair_complete',
+  SELECT_COMPLETE: 'select_complete',
+  REMATCH: 'rematch'
 });
 
 
@@ -268,4 +332,12 @@ function askServer(what) {
 
 function answerServer(which) {
   socket.emit(IO_EVTS.ANSWER, which);
+}
+
+function chatServer(what) {
+  if(what.length > 0)
+    socket.emit(IO_EVTS.CHAT, what);
+}
+function rematchServer(){
+  socket.emit(IO_EVTS.REMATCH,'');
 }

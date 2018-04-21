@@ -2,9 +2,9 @@
 $(function(){
 	var c = document.querySelector('canvas'),
 	ctx = c.getContext('2d'),
-	width = c.width = 878,
-	height = c.height =450,
-  
+	width = c.width = window.innerWidth,
+	height = c.height = window.innerHeight,
+
 	n_stars = 150, //num of stars
 	stars = [], //array to store generated stars
 	twinkleFactor = .4, //how much stars 'twinkle'
