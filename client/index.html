@@ -11,13 +11,23 @@
     <script src="https://use.fontawesome.com/5f4bca6e58.js"></script>
   </head>
   <body>
+    <div id="loading">
+      <p>Loading...</p>
+    </div>
     <div id="center">
-      <div class="side-menu">
+
+      <!--<div class="side-menu">
         <span id="help-button" class="side-option">
           <i class="fa fa-question" aria-hidden="true"></i>
         </span>
-      </div>
-      <span class="game-span">
+      </div>-->
+
+      <span id="chat-box" class="game-span">
+        <div id="chat-contents"></div>
+        <input id="chat-input">
+      </span>
+
+      <span id="main-span" class="game-span">
         <span/>
           <span class="card"><img class="card-img" src="./client/pics/aang.png" alt=""></span>
           <span class="card"><img class="card-img" src="./client/pics/katara.png" alt=""></span>
@@ -73,7 +83,7 @@
             </span><span class="mini-card">
             </span><span class="mini-card">
             </span><span class="mini-card">
-            </span><span class="mini-card" style="margin-right:0">
+            </span><span class="mini-card">
             </span>
           </span>
           <br />
@@ -83,7 +93,7 @@
             </span><span class="mini-card">
             </span><span class="mini-card">
             </span><span class="mini-card">
-            </span><span class="mini-card" style="margin-right:0">
+            </span><span class="mini-card">
             </span>
           </span>
           <br />
@@ -93,7 +103,7 @@
             </span><span class="mini-card">
             </span><span class="mini-card">
             </span><span class="mini-card">
-            </span><span class="mini-card" style="margin-right:0">
+            </span><span class="mini-card">
             </span>
           </span>
           <br />
@@ -103,7 +113,7 @@
             </span><span class="mini-card">
             </span><span class="mini-card">
             </span><span class="mini-card">
-            </span><span class="mini-card" style="margin-right:0">
+            </span><span class="mini-card">
             </span>
           </span>
           <br />
@@ -111,12 +121,22 @@
         </span>
       </span>
     </div>
-    <div id = "asked" class="modal centerer">
-      <p id = "asked-text">Here is my question, do you want to answer it?</p>
-        <button id = "ask-yes" class="fancy-button">Yes</button>
-        <button id = "ask-no" class="fancy-button">No</button>
+
+    <div id="asked" class="modal centerer">
+      <p id="asked-text">Here is my question, do you want to answer it?</p>
+        <button id="ask-yes" class="fancy-button">Yes</button>
+        <button id="ask-no" class="fancy-button">No</button>
     </div>
-    <div id = "select" class="modal centerer">
+
+    <div id="waiting" class="modal centerer">
+      <p id="waiting-text">Waiting for opponent to connect...</p>
+    </div>
+
+    <div id="selecting" class="modal centerer">
+      <p>Waiting for opponent to select...</p>
+    </div>
+
+    <div id="select" class="modal centerer">
       <p id="select-text">Select Your Character</p>
         <span/>
           <span class="card-select"><img class="card-img" src="./client/pics/aang.png" alt=""></span>
@@ -160,9 +180,7 @@
       <br><br> To toggle a character as eliminated, click his or her icon. In the smaller grid, you can see what characters your opponent has currently toggled.
       <br><br> When you're ready to guess your opponent's character, click the "guess" button. You can then click a character to guess, or click the guess button again to cancel. Be careful, if you guess wrong, you lose!
       <br><br>
-      <div class="centerer">
-        <button id = "help-back" class="fancy-button">Back</button>
-      </div>
+      <button id = "help-back" class="fancy-button">Back</button>
     </div>
     <div id = "answered" class="modal centerer">
       <p id = "answered-text">Waiting for the other player to answer your question...</p>
@@ -170,11 +188,32 @@
       <br>
       <br>
       <br>
-        <button id = "answered-back" class="fancy-button" disabled>Done</button>
+      <button id="answered-back" class="fancy-button" disabled>Done</button>
     </div>
-    <div id = "winpage" class="modal centerer">
-    <canvas></canvas>
-    </div>
+    <div id="winpage">
+      <div id="winmodal" class="modal centerer">
+        <p id="game-over-text"></p>
+
+        <div>
+          <span class="reveal-card">
+            <img class="card-img" src="./client/pics/princess-yue.png" alt="">
+            <br>
+            <p class="reveal-text">hi hi</p>
+          </span>
+          <span class="reveal-card" style="margin-right: 0px">
+            <img class="card-img" src="./client/pics/princess-yue.png" alt="">
+            <br>
+            <p class="reveal-text">hi hi</p>
+          </span>
+        </div>
+
+
+        <span>
+          <button class = "fancy-button" id = "rematch">Rematch</button>
+          <button class = "fancy-button" id = "new-opponent">New Opponent</button>
+        </span>
+      </div>
+      <canvas id="win-cavas"></canvas>
     </div>
   </body>
 </html>
