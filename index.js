@@ -22,7 +22,11 @@ var IO_EVTS = Object.freeze({
   SELECT: 'select',
   ASK: 'ask',
   ANSWER: 'answer',
-  WIN_STATE: 'win_state'
+  WIN_STATE: 'win_state',
+  CHAT: 'chat',
+  PAIR_COMPLETE: 'pair_complete',
+  SELECT_COMPLETE: 'select_complete',
+  REMATCH: 'rematch'
 });
 
 function pairClient(socket) {
@@ -72,11 +76,13 @@ function Game(first, second) {
     this.secondRemoved = [];
     this.firstSelect;
     this.secondSelect;
+    
     var firstQ = "";
     var secondQ = "";
     var firstA = "";
     var secondA = "";
-    // "select" "ask" "wait1/2" "answer"
+    var firstR = false;
+    var secondR = false;
     /* gamestates:
      select - waiting for both players to select a character
      ask - both players thinking of questions
@@ -85,7 +91,10 @@ function Game(first, second) {
      answer - 
     */
     var gameState = "select";
-    
+
+    first.emit(IO_EVTS.PAIR_COMPLETE);
+    second.emit(IO_EVTS.PAIR_COMPLETE);
+
     first.on(IO_EVTS.REMOVE, function(data) {
         if (gameState != "ask" && gameState != "wait2") { return; }
         if (!isString(data)) { return; }
@@ -135,11 +144,20 @@ function Game(first, second) {
         console.log(data + ' ' + game.secondSelect);
         gameState = "end";
         if (data == game.secondSelect) {
-            first.emit(IO_EVTS.WIN_STATE, 'win');
-            second.emit(IO_EVTS.WIN_STATE, 'lose');
+            var firstData = ['win', game.firstSelect, game.secondSelect,
+                             "You won! You guessed your opponent's character correctly!"];
+            first.emit(IO_EVTS.WIN_STATE, firstData);
+
+            var secondData = ['lose', game.secondSelect, game.firstSelect,
+                              "You lost! Your opponent guessed your character correctly!"];
+            second.emit(IO_EVTS.WIN_STATE, secondData);
         } else {
-            first.emit(IO_EVTS.WIN_STATE, 'lose');
-            second.emit(IO_EVTS.WIN_STATE, 'win');
+            var firstData = ['lose', game.firstSelect, game.secondSelect,
+                             "You lost! You guessed your opponent's character incorrectly as " + data + "!"];
+            first.emit(IO_EVTS.WIN_STATE, firstData);
+            var secondData = ['win', game.secondSelect, game.firstSelect,
+                              "You won! Your opponent guessed your character incorrectly as " + data + "!"];
+            second.emit(IO_EVTS.WIN_STATE, secondData);
         }
     });
     second.on(IO_EVTS.GUESS, function(data) {
@@ -148,28 +166,43 @@ function Game(first, second) {
         console.log(data + ' ' + game.firstSelect);
         gameState = "end";
         if (data == game.firstSelect) {
-            second.emit(IO_EVTS.WIN_STATE, 'win');
-            first.emit(IO_EVTS.WIN_STATE, 'lose');
+            var secondData = ['win', game.secondSelect, game.firstSelect,
+                             "You won! You guessed your opponent's character correctly!"];
+            second.emit(IO_EVTS.WIN_STATE, secondData);//you guessed correctly
+
+            var firstData = ['lose', game.firstSelect, game.secondSelect,
+                              "You lost! Your opponent guessed your character correctly!"];
+            first.emit(IO_EVTS.WIN_STATE, firstData);//opponent guessed correctly
         } else {
-            second.emit(IO_EVTS.WIN_STATE, 'lose');
-            first.emit(IO_EVTS.WIN_STATE, 'win');
+            var secondData = ['lose', game.secondSelect, game.firstSelect,
+                             "You lost! You guessed your opponent's character incorrectly as " + data + "!"];
+            second.emit(IO_EVTS.WIN_STATE, secondData);//you guessed correctly
+
+            var firstData = ['win', game.firstSelect, game.secondSelect,
+                              "You won! Your opponent guessed your character incorrectly as " + data + "!"];
+            first.emit(IO_EVTS.WIN_STATE, firstData);//opponent guessed correctly
         }
     });
-
     first.on(IO_EVTS.SELECT, function(data) {
         if (gameState != "select") { return; }
         if (!isString(data)) { return; }
+        if (!names.includes(data)) { return; }
         game.firstSelect = data;
         if (game.secondSelect) {
             gameState = "ask";
+            first.emit(IO_EVTS.SELECT_COMPLETE);
+            second.emit(IO_EVTS.SELECT_COMPLETE);
         }
     });
     second.on(IO_EVTS.SELECT, function(data) {
         if (gameState != "select") { return; }
         if (!isString(data)) { return; }
+        if (!names.includes(data)) { return; }
         game.secondSelect = data;
         if (game.firstSelect) {
             gameState = "ask";
+            first.emit(IO_EVTS.SELECT_COMPLETE);
+            second.emit(IO_EVTS.SELECT_COMPLETE);
         }
     });
 
@@ -205,10 +238,57 @@ function Game(first, second) {
             gameState = "ask";
         }
     });
+    first.on(IO_EVTS.CHAT, function(data) {
+        data = filterText(data);
+        first.emit(IO_EVTS.CHAT, "You: " + data);
+        second.emit(IO_EVTS.CHAT, "Friend: " + data);
+    });
+    second.on(IO_EVTS.CHAT, function(data) {
+        data = filterText(data);
+        first.emit(IO_EVTS.CHAT, "Friend: " + data);
+        second.emit(IO_EVTS.CHAT, "You: " + data);
+    });
+    first.on(IO_EVTS.REMATCH, function(data) {
+        if(secondR && !firstR){
+            //rematch
+        }
+        else if(!secondR){
+            if(firstR){
+                second.emit(IO_EVTS.REMATCH,"cancel");
+            }else{
+                second.emit(IO_EVTS.REMATCH,"request");
+            }
+            firstR = !firstR;
+        }
+    });
+    second.on(IO_EVTS.REMATCH, function(data) {
+        if(firstR && !secondR){
+            //rematch
+        }
+        else if(!firstR){
+            if(secondR){
+                first.emit(IO_EVTS.REMATCH,"cancel");
+            }else{
+                first.emit(IO_EVTS.REMATCH,"request");
+            }
+            secondR = !secondR;
+        }
+    });
 }
 
 function isString(data) {
     return typeof data === "string" || data instanceof String;
+}
+function filterText(data){
+    data = data + " ";
+    data = data.replace("fuck ","flying hogmonkey ");
+    data = data.replace("bitch ","bleeding hogmonkey ");
+    data = data.replace("shit ","snoozles ");
+    data = data.replace("dumbfuck ","yip yip ");
+    data = data.replace("damn ","drat ");
+    data = data.replace("cunt ","crud ");
+    data = data.replace("fucking ","jerkbending ");
+    return data;
 }
 
 http.listen(process.env.PORT, process.env.IP);
