@@ -1,10 +1,19 @@
 {
-  "name": "workspace",
+  "name": "avatar-guess",
   "version": "1.0.0",
   "description": "No description",
   "main": "index.js",
+  "engines": {
+    "node": "9.11.1"
+  },
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4",
+    "heapq": "^0.0.3",
   },
   "repository": {
     "type": "git",
@@ -12,7 +21,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "No License",
   "bugs": {
     "url": "https://github.com/j3698/guess/issues"
   },

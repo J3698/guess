@@ -1,0 +1,8 @@
+{
+  "name": "avatar-guess",
+  "description": "A guessing game for avatar characters",
+  "repository": "git+https://github.com/j3698/guess.git",
+  "logo": "",
+  "keywords": ["node", "avatar", "game", "ATLA"],
+  "image": "heroku/nodejs"
+}
