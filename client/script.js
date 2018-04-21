@@ -297,7 +297,6 @@ function initIO() {
       }
     });
 }
-
 // enums
 var IO_EVTS = Object.freeze({
   PAIR: 'pair',
@@ -312,7 +311,6 @@ var IO_EVTS = Object.freeze({
   SELECT_COMPLETE: 'select_complete',
   REMATCH: 'rematch'
 });
-
 
 function removeServer(whomst) {
   socket.emit(IO_EVTS.REMOVE, whomst);
