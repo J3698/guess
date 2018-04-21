@@ -38,7 +38,7 @@ p {
   position: relative;
 }
 
-.modal {
+.modal, .full-modal, .modal-container {
   position: absolute;
   visibility: hidden;
   top: 50%;
@@ -47,12 +47,31 @@ p {
   margin: 0 auto;
 
   margin-top: calc(0.90 * -20.115vw);
-  width: calc(0.90 * 94.8vw);  
-  // width: calc(0.90 * 77.55vw);
+  width: calc(0.90 * 94.8vw);
   height: calc(0.90 * 40.23vw);
 
   background-color: rgba(0, 0, 0, 0.8);
   color: var(--button-bg);
+}
+
+.modal-container {
+  background-color: rgba(0, 0, 0, 0.0);
+  visibility: inherit;
+}
+
+.full-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal {
+  left: auto;
+  right: calc(0.9 * 8vw);
+  width: calc(0.90 * 72.7vw);
 }
 
 #main-span {
