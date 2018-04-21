@@ -1,14 +1,15 @@
 * {
   --button-bg: rgba(255, 255, 255, 0.5);
   --button-fg: black;
-  border-radius: 3px;
+  border-radius: calc(0.90 * 0.3vw);
+  font-size: 0;
 }
 
 body {
   overflow-y: hidden;
   overflow-x: hidden;
   height: 100vh;
-  width: 100vw;
+  width: calc(0.90 * 100vw);
   background-image:
     radial-gradient(black 0%, black 20%, transparent 100%),
       url("./pics/avatar_bg.jpg");
@@ -18,16 +19,23 @@ body {
   //background: #000;
 }
 
-button:focus {
-  outline: none;
+p {
+  font-size:calc(0.90 * 2vw);
 }
 
 .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: calc(0.90 * 100vw);
   height: 100vh;
+}
+
+#waiting p, #selecting p {
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  position: relative;
 }
 
 .modal {
@@ -38,25 +46,26 @@ button:focus {
   right: 0;
   margin: 0 auto;
 
-  margin-top: -225px;
-  width: 878px;
-  height: 450px;
+  margin-top: calc(0.90 * -20.115vw);
+  width: calc(0.90 * 94.8vw);  
+  // width: calc(0.90 * 77.55vw);
+  height: calc(0.90 * 40.23vw);
 
   background-color: rgba(0, 0, 0, 0.8);
   color: var(--button-bg);
-  font-size: 20px;
+}
 
-//  text-align: center;
-//  line-height: 225px;
+#main-span {
+  padding-left: calc(0.90 * 0.89vw);
 }
 
 .fancy-button {
   border: none;
   background-color: var(--button-bg);
   color: var(--button-fg);
-  width: 128px;
-  height: 45px;
-  font-size: 30px;
+  width: calc(0.90 * 11.44vw);
+  height: calc(0.90 * 4.021vw);
+  font-size: calc(0.90 * 3vw);
 }
 
 .fancy-button:hover {
@@ -69,27 +78,26 @@ button:focus {
 .side-option:hover {
   background-color: rgba(255, 255, 255, 0.65);
 }
+
 #help {
   visibility: hidden;
-  padding: 30px;
+  padding: calc(0.90 * 2.681vw);
   box-sizing: border-box;
+  font-size: calc(0.90 * 1.8vw);
 }
 
-#yes-button, #no-button {
-  border: none;
-  width: 100px;
-  font-size: 25px;
-  height: 40px;
-  color: var(--button-fg);
-  background-color: var(--button-bg)
+#help-back {
+  position: absolute;
+  left: 50%;
+  bottom: calc(0.90 * 3vw);
+  transform: translateX(-50%);
 }
 
-#yes-button {
-  margin-right: 20px;
-}
-
-#yes-button:hover, #no-button:hover {
-  transform: scale(.97)
+#answered-back {
+  position: absolute;
+  left: 50%;
+  bottom: calc(0.90 * 3vw);
+  transform: translateX(-50%);
 }
 
 #center {
@@ -100,11 +108,11 @@ button:focus {
   right: 0;
   left: 0;
 
-  height: 38.43vw;
-  width: 76.7vw;
+  height: calc(0.90 * 38.43vw);
+  width: calc(0.90 * 93vw);
+  // width: calc(0.90 * 85vw);
 
-  padding: 0.9vw;
-  border-radius: 5px;
+  padding: calc(0.90 * 0.9vw);
   font-size:0;
 
   background: rgba(0, 0, 0, 0.5);
@@ -112,26 +120,29 @@ button:focus {
 
 .side-menu {
   display: inline-block;
-
   vertical-align: top;
 
-  font-size: 0;
+  margin-right: calc(0.90 * 0.447vw);
+}
+
+#win-cavas {
+  pointer-events: none;
 }
 
 .side-option {
   display: inline-block;
 
-  height: 3.76vw;
-  width: 3.76vw;
+  height: calc(0.90 * 3.76vw);
+  width: calc(0.90 * 3.76vw);
 
-  margin-bottom: 0.45vw;
+  margin-bottom: calc(0.90 * 0.45vw);
 
   background-color: var(--button-bg);
   color: var(--button-fg);
 
-  font-size: 30px;
+  font-size: calc(0.90 * 2.8vw);
   text-align: center;
-  line-height: 45px;
+  line-height: calc(0.90 * 4.021vw);
 }
 .side-option:hover {
   background-color: rgba(255, 255, 255, 0.65);
@@ -139,25 +150,29 @@ button:focus {
 .card {
   display: inline-block;
 
-  height: 8.05vw;
-  width: 8.05vw;
+  height: calc(0.90 * 8.05vw);
+  width: calc(0.90 * 8.05vw);
+  margin-bottom: calc(0.90 * 0.35vw);
 
   background-color: rgba(0, 0, 0, 0.5);
 
-  transform: scale(1);
   z-index: 0;
 
 }
 
+.card:not(:last-child) {
+  margin-right: calc(0.90 * 0.35vw);
+}
+
 #select-text {
-  color: white;
+  font-size: calc(0.90 * 1.8vw);
 }
 
 .card-select {
   display: inline-block;
 
-  height: 85px;
-  width: 85px;
+  height: calc(0.90 * 7.596vw);
+  width: calc(0.90 * 7.596vw);
 
   background-color: rgba(0, 0, 0, 0.5);
 
@@ -166,8 +181,13 @@ button:focus {
 
 }
 
+.card-select:not(:last-child) {
+  margin-right: calc(0.90 * 0.4vw);
+  margin-bottom: calc(0.90 * 0.4vw);
+}
+
 .card-select:hover {
-  transform: scale(0.95);
+  transform: scale(1.03);
   z-index: 5;
 }
 
@@ -184,7 +204,7 @@ button:focus {
   width: 100%;
   height: 50%;
   position: relative;
-  font-size: 15px;
+  font-size: calc(0.90 * 1.4vw);
   padding: 0;
   margin: 0;
   border-radius: 0;
@@ -199,25 +219,45 @@ button:focus {
 }
 
 .card:hover {
-  transform: scale(0.95);
+  transform: scale(1.03);
   z-index: 5;
 }
 
 .mini-card {
   display: inline-block;
 
-  height:2.85vw;
-  width: 2.85vw;
+  height:calc(0.90 * 2.85vw);
+  width: calc(0.90 * 3vw);
 
-  margin-right: .6vw;
+  margin-top: calc(0.90 * 0.41vw);
 
   background-color: rgba(150, 150, 150, 0.5);
 }
 
+.mini-card:not(:last-child) {
+  margin-right: calc(0.90 * 0.5vw);
+}
+
+.reveal-card {
+  display: inline-block;
+  margin-top: calc(calc(0.90 * 22.23vw) / 2 - calc(0.90 * 15vw) / 2);
+  margin-right: calc(0.90 * 7vw);
+  height: calc(0.90 * 15vw);
+  width: calc(0.90 * 15vw);
+  vertical-align: top;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.reveal-text {
+  width: 150%;
+  margin-left: -25%;
+}
+
 .main-card {
   display: inline-block;
-  height: 19.7vw;
-  width: 20.2vw;
+  height: calc(0.90 * 20.2vw);
+  width: calc(0.90 * 20.55vw);
 
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -231,32 +271,42 @@ button:focus {
   transform: scale(0.8);
 }
 
+#winpage {
+  visibility: hidden;
+}
+
+#win-cavas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .mini-board {
-  font-size: .2vw;
 }
 
 .question-input {
-  width: 50.04vw;
-  height: 4.65vw;
+  width: calc(0.90 * 50.04vw);
+  height: calc(0.90 * 4.65vw);
+  margin-top: calc(0.90 * 0.07vw);
+  box-sizing: border-box;
 
-  font-size: 50px;
+  font-size: calc(0.90 * 4.5vw);
 
   border: none;
 
-  background-color: var(--button-bg);;
+  background-color: var(--button-bg);
 }
 
 .game-span {
   display: inline-block;
   vertical-align: middle;
-  text-align: center;
-  height: 600px;
+  height: calc(0.90 * 53.63vw);
   top: 0;
 }
 
 #right-game-span {
-  padding-left: 10px;
-  width: 230px;
+  padding-left: calc(0.90 * 0.89vw);
+  width: calc(0.90 * 20.55vw);
 }
 
 .centerer {
@@ -264,12 +314,121 @@ button:focus {
 }
 
 #ask-button {
-  width: 20.56vw;
-  height: 4.65vw;
-  font-size: 25px;
-  margin-top: 0.8vw;
+  width: calc(0.90 * 20.55vw);
+  height: calc(0.90 * 4.65vw);
+  font-size: calc(0.90 * 2.3vw);
+  margin-top: calc(0.90 * 0.5vw);
 }
 
-.query-button:hover {
-  transform: scale(0.97);
+#asked-text {
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+
+#waiting-text {
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+
+#answered-text {
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+
+#ask-yes, #ask-no, #rematch, #new-opponent {
+  position: absolute;
+  bottom: calc(0.90 * 3vw);
+  left: 50%;
+}
+
+#ask-yes, #rematch {
+  transform: translateX(calc(-100% - calc(0.90 * 3.5vw)));
+}
+
+#ask-no, #new-opponent {
+  transform: translateX(calc(0% + calc(0.90 * 3.5vw)));
+}
+
+#rematch {
+  margin-right: calc(0.90 * 5vw);
+}
+
+#rematch, #new-opponent {
+  font-size: calc(0.90 * 1.5vw);
+  line-height: calc(0.90 * 1.5vw);
+}
+
+#chat-box {
+  width: calc(0.90 * 20.55vw);
+}
+
+#chat-contents {
+  background-color: rgba(150, 150, 150, 0.5);
+  width: inherit;
+  height: calc(0.9 * 33.2vw);
+  position: absolute;
+  top: calc(0.9 * 0.9vw);
+  overflow-y: auto;
+}
+
+#chat-input {
+  margin-top: calc(0.90 * 0.5vw);
+  width: inherit;
+  border: none;
+  height: calc(0.90 * 4.65vw);
+  box-sizing: border-box;
+  font-size: calc(0.90 * 2vw);
+  background-color: var(--button-bg);
+  position: absolute;
+  top: calc(0.9 * 34.1vw);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5); 
+}
+
+#chat-message {
+  font-size: calc(0.90 * 1.5vw);
+  margin: calc(0.90 * 0.4vw);
+  color: rgba(255, 255, 255, 0.6);
+  box-sizing: border-box;
+  word-wrap: break-word;
+  border-bottom-style: solid;
+  border-bottom-width: 1px; /* keep as px */
+  border-bottom-color: rgba(255,255,255,0.2);
+}
+
+#loading {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+
+  color: rgba(255, 255, 255, 0.5);
+  background-color: black;
+  font-size: 5vw;
+}
+
+#loading p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
