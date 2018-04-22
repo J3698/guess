@@ -205,7 +205,6 @@ function Game(first, second) {
             second.emit(IO_EVTS.SELECT_COMPLETE);
         }
     });
-
     first.on(IO_EVTS.ANSWER, function(data) {
         if (gameState != "answer") { return; }
         if (!isString(data)) { return; }
@@ -262,13 +261,12 @@ function Game(first, second) {
         }
     });
     second.on(IO_EVTS.REMATCH, function(data) {
-        if(firstR && !secondR){
+        if (firstR && !secondR) {
             //rematch
-        }
-        else if(!firstR){
-            if(secondR){
+        } else if (!firstR) {
+            if (secondR) {
                 first.emit(IO_EVTS.REMATCH,"cancel");
-            }else{
+            } else {
                 first.emit(IO_EVTS.REMATCH,"request");
             }
             secondR = !secondR;
@@ -279,6 +277,7 @@ function Game(first, second) {
 function isString(data) {
     return typeof data === "string" || data instanceof String;
 }
+
 function filterText(data){
     data = data + " ";
     data = data.replace("fuck ","flying hogmonkey ");

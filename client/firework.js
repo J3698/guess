@@ -1,3 +1,4 @@
+var startFireworks;
 
 $(function(){
 	var c = document.querySelector('canvas'),
@@ -124,13 +125,13 @@ $(function(){
 		if (fw1.life == LIFE * delay) fw2 = new Firework;
 		if (fw2.life == LIFE * delay) fw1 = new Firework;
     
-    fw3.update();
+	    fw3.update();
 		fw4.update();
 
 		if (fw3.life == LIFE * delay) fw4 = new Firework;
 		if (fw4.life == LIFE * delay) fw3 = new Firework;
     
-    fw5.update();
+	    fw5.update();
 		fw6.update();
 
 		if (fw5.life == LIFE * delay) fw6 = new Firework;
@@ -151,5 +152,5 @@ $(function(){
 		fw6.life = -LIFE * delay;
 		main();
 	}
-	initFireworks();
+	startFireworks = initFireworks;
 });

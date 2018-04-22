@@ -281,6 +281,9 @@ function initIO() {
       $(otherText).text("Opponent chose " + data[2]);
       $("#game-over-text").text(data[3]);
       endText = data[3];
+      if (data[0] == "win") {
+        startFireworks();
+      }
     });
     socket.on(IO_EVTS.CHAT, function(data) {
       var chatbox = document.getElementById("chat-contents");
