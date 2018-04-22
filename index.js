@@ -99,16 +99,38 @@ function Game(first, second) {
         if (gameState != "ask" && gameState != "wait2") { return; }
         if (!isString(data)) { return; }
         if (game.firstRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
-            game.firstRemoved.push(data);
-            second.emit(IO_EVTS.REMOVE, data);
+            if (data == game.secondSelect) {
+                gameState = "end";
+                var secondData = ["win", game.secondSelect, game.firstSelect,
+                                 "You won! Your opponent removed your character!"];
+                second.emit(IO_EVTS.WIN_STATE, secondData);
+
+                var firstData = ["lose", game.firstSelect, game.secondSelect,
+                                 "You lost! Your removed your opponents character!"];
+                first.emit(IO_EVTS.WIN_STATE, firstData);
+            } else {
+                game.firstRemoved.push(data);
+                second.emit(IO_EVTS.REMOVE, data);
+            }
         }
     });
     second.on(IO_EVTS.REMOVE, function(data) {
         if (gameState != "ask" && gameState != "wait1") { return; }
         if (!isString(data)) { return; }
         if (game.secondRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
-            game.secondRemoved.push(data);
-            first.emit(IO_EVTS.REMOVE, data);
+            if (data == game.firstSelect) {
+                gameState = "end";
+                var firstData = ["win", game.firstSelect, game.secondSelect,
+                                 "You won! Your opponent removed your character!"];
+                first.emit(IO_EVTS.WIN_STATE, firstData);
+
+                var secondData = ["lose", game.secondSelect, game.firstSelect,
+                                 "You lost! Your removed your opponents character!"];
+                second.emit(IO_EVTS.WIN_STATE, secondData);
+            } else {
+                game.secondRemoved.push(data);
+                first.emit(IO_EVTS.REMOVE, data);
+            }
         }
     });
 
