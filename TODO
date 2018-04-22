@@ -1,13 +1,17 @@
 To push changes:
 git add [file]  (for all files necessary)
 
--Chat scrolling             []
+
 -Matchmaking options        []
 -New Game on GG             []
 -Rematch on GG              []
 -Disconnect Notices         []
 -Timer                      []
--Remove correct person      []
+-Help button                []
+-Nudge button               []
+-Remove correct person      [x]
+-Chat scrolling             [x]
+-Favicon                    [x]
 -Modal Sizes                [x]
 -Loading Screen             [x]
 -Chat box                   [x]
