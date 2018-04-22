@@ -47,7 +47,6 @@ function askQ() {
 function chatM(){
   var el = $("#chat-input");
   var q = el.val();
-  console.log("You chatted: " + q);
   el.val("");
   chatServer(q);
 }
@@ -204,7 +203,30 @@ function startSideBar() {
   });
 }
 
-// $(window).on("load", handler)
+function startChatScroller() {
+  var chatbox = document.getElementById("chat-contents");
+  var atBottom = true;
+  chatbox.onscroll = function scrollListener() {
+      var height = chatbox.scrollHeight - chatbox.clientHeight;
+      var scroll = chatbox.scrollTop / height; // [0, 1]
+      if (scroll != 1 && !isNaN(scroll)) {
+        atBottom = false;
+      } else if (scroll == 1 || isNaN(scroll)) {
+        atBottom = true;
+      }
+  };
+  var scroller = new MutationObserver(function chatScroll() {
+      var height = chatbox.scrollHeight - chatbox.clientHeight;
+      var scroll = chatbox.scrollTop / height; // [0, 1]
+
+      if (atBottom) {
+        chatbox.scrollBy(0, height - chatbox.scrollTop);
+        console.log("s" + (height - chatbox.scrollTop));
+      }
+  });
+  scroller.observe(chatbox, {childList: true});
+}
+
 $(document).ready(function() {
   $("#ask-button").click(askQ);
   $("#waiting").css("visibility", "visible");
@@ -221,6 +243,7 @@ $(document).ready(function() {
   $("#rematch").click(rematch);
   startCards();
   startSideBar();
+  startChatScroller();
 });
 
 $(window).on("load", function() {
