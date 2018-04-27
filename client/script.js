@@ -1,3 +1,7 @@
+/* global $ */
+/* global io */
+/* startFireworks */
+
 var cardInsides =
 `
 <div class="card-option-holder option-div">
@@ -19,8 +23,10 @@ var names = ["aang", "katara", "sokka", "toph", "zuko", "iroh", "azula",
              "cabbage-man", "aunt-wu", "master-pakku", "jeong-jeong",
              "combustion-man", "joo-dee"];
 
+var pingDelay = 500;
+
 var baseURL;
-a = window.location.href;
+var a = window.location.href;
 var b = a.substr(a.lastIndexOf("."));
 if (b.includes("/")) {
 	baseURL = a.substr(0, a.lastIndexOf("/") + 1);
@@ -250,6 +256,7 @@ $(window).on("load", function() {
   console.log("hiding loadscreen");
   initIO();
   $("#loading").css("visibility", "hidden");
+  window.setInterval(pingServer, pingDelay); //every .5 seconds (needs to be same as server)
 });
 
 var GAME_STATE = Object.freeze({
@@ -330,6 +337,14 @@ function initIO() {
         $("#game-over-text").text(endText + " Request has been cancelled.");
       }
     });
+    socket.on(IO_EVTS.DING, function(data) {
+      if (data == "opp_disconn") {
+        $("#center").attr("notif-content", "Opponent Reconnecting...");
+      } else if (data == "opp_reconn") {
+        $("#center").attr("notif-content", "");
+      }
+      
+    });
 }
 // enums
 var IO_EVTS = Object.freeze({
@@ -343,7 +358,8 @@ var IO_EVTS = Object.freeze({
   CHAT: 'chat',
   PAIR_COMPLETE: 'pair_complete',
   SELECT_COMPLETE: 'select_complete',
-  REMATCH: 'rematch'
+  REMATCH: 'rematch',
+  DING: 'ding'
 });
 
 function removeServer(whomst) {
@@ -372,4 +388,8 @@ function chatServer(what) {
 }
 function rematchServer(){
   socket.emit(IO_EVTS.REMATCH,'');
+}
+function pingServer(){
+  console.log("pinging server");
+  socket.emit(IO_EVTS.DING,'');
 }

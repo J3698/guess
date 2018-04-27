@@ -26,7 +26,8 @@ var IO_EVTS = Object.freeze({
   CHAT: 'chat',
   PAIR_COMPLETE: 'pair_complete',
   SELECT_COMPLETE: 'select_complete',
-  REMATCH: 'rematch'
+  REMATCH: 'rematch',
+  DING: 'ding'
 });
 
 function pairClient(socket) {
@@ -70,19 +71,93 @@ var names = ["aang", "katara", "sokka", "toph", "zuko", "iroh", "azula",
              "cabbage-man", "aunt-wu", "master-pakku", "jeong-jeong",
              "combustion-man", "joo-dee"];
 
+var pingTimeout = 50000;  //50 seconds
+var pingDelay = 500;
+var timeoutWarning = 3 * pingDelay;
+
 function Game(first, second) {
-    var game = this;
-    this.firstRemoved = [];
-    this.secondRemoved = [];
-    this.firstSelect;
-    this.secondSelect;
-    
+    var firstRemoved = [];
+    var secondRemoved = [];
+
+    var firstSelect;
+    var secondSelect;
+
     var firstQ = "";
     var secondQ = "";
     var firstA = "";
     var secondA = "";
-    var firstR = false;
-    var secondR = false;
+
+    var d = new Date();
+    var t1 = d.getTime();
+    var t2 = d.getTime();
+
+    var firstRematch = false;
+    var secondRematch = false;
+
+    var firstDc = false;
+    var secondDc = false;
+
+    function endGame(winner, loser, winMsg, loseMsg) {
+        if (winner == first) {
+            var winSelect = firstSelect;
+            var loseSelect = secondSelect;
+        } else {
+            var winSelect = secondSelect;
+            var loseSelect = firstSelect;
+        }
+        gameState = "end";
+        var winData = ["win", winSelect, loseSelect, winMsg];
+        winner.emit(IO_EVTS.WIN_STATE, winData);
+        var loseData = ["lose", loseSelect, winSelect, loseMsg];
+        loser.emit(IO_EVTS.WIN_STATE, loseData);
+    }
+
+    // ping check
+    setInterval(function(){
+        var d = new Date();
+        // console.log("Date:" + d.getTime());
+        // console.log("T1:  " + t1);
+        // console.log("T2:  " + t2);
+
+        // manage temporary disconnections
+        if (d.getTime() - t1 > timeoutWarning) {
+            console.log("1 dc")
+            if (!firstDc) {
+                firstDc = true;
+                second.emit(IO_EVTS.DING, "opp_disconn");
+            }
+        } else {
+            if (firstDc) {
+                firstDc = false;
+                second.emit(IO_EVTS.DING, "opp_reconn");
+            }
+        }
+        if (d.getTime() - t2 > timeoutWarning) {
+            console.log("2 dc")
+            if (!secondDc) {
+                secondDc = true;
+                first.emit(IO_EVTS.DING, "opp_disconn");
+            }
+        } else {
+            if (secondDc) {
+                secondDc = false;
+                first.emit(IO_EVTS.DING, "opp_reconn");
+            }
+        }
+
+        // manage permanent disconnection
+        if (d.getTime() - t1 > pingTimeout) {
+            // console.log(d.getTime() - t1);
+            // console.log("disconnecting");
+            endGame(second, first, "You won! Your opponent disconnected!",
+                                            "You lost! You disconnected!");
+        } else if (d.getTime() - t2 > pingTimeout) {
+            // console.log(d.getTime() - t2);
+            // console.log("disconnecting");
+            endGame(first, second, "You won! Your opponent disconnected!",
+                                            "You lost! You disconnected!");
+        }
+    }, pingDelay);
     /* gamestates:
      select - waiting for both players to select a character
      ask - both players thinking of questions
@@ -95,21 +170,26 @@ function Game(first, second) {
     first.emit(IO_EVTS.PAIR_COMPLETE);
     second.emit(IO_EVTS.PAIR_COMPLETE);
 
+    first.on(IO_EVTS.DING, function(data) {
+        console.log("recieved thing");
+        var d = new Date();
+        t1 = d.getTime();
+    });
+    second.on(IO_EVTS.DING, function(data) {
+        console.log("recieved thing");
+        var d = new Date();
+        t2 = d.getTime();
+    });
+
     first.on(IO_EVTS.REMOVE, function(data) {
         if (gameState != "ask" && gameState != "wait2") { return; }
         if (!isString(data)) { return; }
-        if (game.firstRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
-            if (data == game.secondSelect) {
-                gameState = "end";
-                var secondData = ["win", game.secondSelect, game.firstSelect,
-                                 "You won! Your opponent removed your character!"];
-                second.emit(IO_EVTS.WIN_STATE, secondData);
-
-                var firstData = ["lose", game.firstSelect, game.secondSelect,
-                                 "You lost! Your removed your opponents character!"];
-                first.emit(IO_EVTS.WIN_STATE, firstData);
+        if (firstRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
+            if (data == secondSelect) {
+                endGame(second, first, "You won! Your opponent removed your character!",
+                                    "You lost! Your removed your opponents character!");
             } else {
-                game.firstRemoved.push(data);
+                firstRemoved.push(data);
                 second.emit(IO_EVTS.REMOVE, data);
             }
         }
@@ -117,18 +197,12 @@ function Game(first, second) {
     second.on(IO_EVTS.REMOVE, function(data) {
         if (gameState != "ask" && gameState != "wait1") { return; }
         if (!isString(data)) { return; }
-        if (game.secondRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
-            if (data == game.firstSelect) {
-                gameState = "end";
-                var firstData = ["win", game.firstSelect, game.secondSelect,
-                                 "You won! Your opponent removed your character!"];
-                first.emit(IO_EVTS.WIN_STATE, firstData);
-
-                var secondData = ["lose", game.secondSelect, game.firstSelect,
-                                 "You lost! Your removed your opponents character!"];
-                second.emit(IO_EVTS.WIN_STATE, secondData);
+        if (secondRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
+            if (data == firstSelect) {
+                endGame(first, second, "You won! Your opponent removed your character!",
+                                    "You lost! Your removed your opponents character!");
             } else {
-                game.secondRemoved.push(data);
+                secondRemoved.push(data);
                 first.emit(IO_EVTS.REMOVE, data);
             }
         }
@@ -163,54 +237,35 @@ function Game(first, second) {
     first.on(IO_EVTS.GUESS, function(data) {
         if (gameState != "ask" && gameState != "wait2") { return; }
         if (!isString(data)) { return; }
-        console.log(data + ' ' + game.secondSelect);
+        console.log(data + ' ' + secondSelect);
         gameState = "end";
-        if (data == game.secondSelect) {
-            var firstData = ['win', game.firstSelect, game.secondSelect,
-                             "You won! You guessed your opponent's character correctly!"];
-            first.emit(IO_EVTS.WIN_STATE, firstData);
-
-            var secondData = ['lose', game.secondSelect, game.firstSelect,
-                              "You lost! Your opponent guessed your character correctly!"];
-            second.emit(IO_EVTS.WIN_STATE, secondData);
+        if (data == secondSelect) {
+            endGame(first, second, "You won! You guessed your opponent's character correctly!",
+                                "You lost! Your opponent guessed your character correctly!");
         } else {
-            var firstData = ['lose', game.firstSelect, game.secondSelect,
-                             "You lost! You guessed your opponent's character incorrectly as " + data + "!"];
-            first.emit(IO_EVTS.WIN_STATE, firstData);
-            var secondData = ['win', game.secondSelect, game.firstSelect,
-                              "You won! Your opponent guessed your character incorrectly as " + data + "!"];
-            second.emit(IO_EVTS.WIN_STATE, secondData);
+            endGame(second, first, "You won! Your opponent guessed your character incorrectly as " + data + "!",
+                                "You lost! You guessed your opponent's character incorrectly as " + data + "!");
         }
     });
     second.on(IO_EVTS.GUESS, function(data) {
         if (gameState != "ask" && gameState != "wait1") { return; }
         if (!isString(data)) { return; }
-        console.log(data + ' ' + game.firstSelect);
+        console.log(data + ' ' + firstSelect);
         gameState = "end";
-        if (data == game.firstSelect) {
-            var secondData = ['win', game.secondSelect, game.firstSelect,
-                             "You won! You guessed your opponent's character correctly!"];
-            second.emit(IO_EVTS.WIN_STATE, secondData);//you guessed correctly
-
-            var firstData = ['lose', game.firstSelect, game.secondSelect,
-                              "You lost! Your opponent guessed your character correctly!"];
-            first.emit(IO_EVTS.WIN_STATE, firstData);//opponent guessed correctly
+        if (data == firstSelect) {
+            endGame(second, first, "You won! You guessed your opponent's character correctly!",
+                                "You lost! Your opponent guessed your character correctly!");
         } else {
-            var secondData = ['lose', game.secondSelect, game.firstSelect,
-                             "You lost! You guessed your opponent's character incorrectly as " + data + "!"];
-            second.emit(IO_EVTS.WIN_STATE, secondData);//you guessed correctly
-
-            var firstData = ['win', game.firstSelect, game.secondSelect,
-                              "You won! Your opponent guessed your character incorrectly as " + data + "!"];
-            first.emit(IO_EVTS.WIN_STATE, firstData);//opponent guessed correctly
+            endGame(first, second, "You won! Your opponent guessed your character incorrectly as " + data + "!",
+                                "You lost! You guessed your opponent's character incorrectly as " + data + "!");
         }
     });
     first.on(IO_EVTS.SELECT, function(data) {
         if (gameState != "select") { return; }
         if (!isString(data)) { return; }
         if (!names.includes(data)) { return; }
-        game.firstSelect = data;
-        if (game.secondSelect) {
+        firstSelect = data;
+        if (secondSelect) {
             gameState = "ask";
             first.emit(IO_EVTS.SELECT_COMPLETE);
             second.emit(IO_EVTS.SELECT_COMPLETE);
@@ -220,8 +275,8 @@ function Game(first, second) {
         if (gameState != "select") { return; }
         if (!isString(data)) { return; }
         if (!names.includes(data)) { return; }
-        game.secondSelect = data;
-        if (game.firstSelect) {
+        secondSelect = data;
+        if (firstSelect) {
             gameState = "ask";
             first.emit(IO_EVTS.SELECT_COMPLETE);
             second.emit(IO_EVTS.SELECT_COMPLETE);
@@ -270,28 +325,28 @@ function Game(first, second) {
         second.emit(IO_EVTS.CHAT, "You: " + data);
     });
     first.on(IO_EVTS.REMATCH, function(data) {
-        if(secondR && !firstR){
+        if(secondRematch && !firstRematch){
             //rematch
         }
-        else if(!secondR){
-            if(firstR){
+        else if(!secondRematch){
+            if(firstRematch){
                 second.emit(IO_EVTS.REMATCH,"cancel");
             }else{
                 second.emit(IO_EVTS.REMATCH,"request");
             }
-            firstR = !firstR;
+            firstRematch = !firstRematch;
         }
     });
     second.on(IO_EVTS.REMATCH, function(data) {
-        if (firstR && !secondR) {
+        if (firstRematch && !secondRematch) {
             //rematch
-        } else if (!firstR) {
-            if (secondR) {
+        } else if (!firstRematch) {
+            if (secondRematch) {
                 first.emit(IO_EVTS.REMATCH,"cancel");
             } else {
                 first.emit(IO_EVTS.REMATCH,"request");
             }
-            secondR = !secondR;
+            secondRematch = !secondRematch;
         }
     });
 }
