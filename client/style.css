@@ -135,6 +135,8 @@ p {
   font-size:0;
 
   background: rgba(0, 0, 0, 0.5);
+
+//  visibility: hidden;
 }
 
 .side-menu {
@@ -450,4 +452,30 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+/*
+#notif {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  text-align: center;
+  font-size: 3vw;
+  height: auto;
+}
+*/
+#center::before {
+  content: attr(notif-content);
+
+  position: absolute;
+  text-align: center;
+
+  top: -2.4vw;
+  left: 0;
+  font-size: 2vw;
+  width: calc(0.90 * 94.8vw);
+  border-radius: inherit;
+
+  color: white;
+  background-color: #ffb861;
 }
