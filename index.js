@@ -7,6 +7,14 @@ var heapq = require('heapq');
 // static files
 app.use('/client', express.static(__dirname + "/client"));
 
+// game
+app.get('/game/*', function(req, res) {
+    res.sendFile(__dirname + '/client/game.html');
+});
+app.get('/game', function(req, res) {
+    res.sendFile(__dirname + '/client/game.html');
+});
+
 // index
 app.get('/*', function(req, res) {
     res.sendFile(__dirname + '/client/index.html');
@@ -59,6 +67,7 @@ function pairClient(socket) {
             }
         }
     });
+    
 }
 
 var queue = [];
@@ -82,10 +91,10 @@ function Game(first, second) {
     var firstSelect;
     var secondSelect;
 
-    var firstQ = "";
-    var secondQ = "";
-    var firstA = "";
-    var secondA = "";
+    var firstQ = null;
+    var secondQ = null;
+    var firstA = null;
+    var secondA = null;
 
     var d = new Date();
     var t1 = d.getTime();
@@ -97,7 +106,21 @@ function Game(first, second) {
     var firstDc = false;
     var secondDc = false;
 
-    function endGame(winner, loser, winMsg, loseMsg) {
+    /* gamestates:
+     select - waiting for both players to select a character
+     ask - both players thinking of questions
+     wait1 - only first player has asked a question
+     wait2 - only second player has asked a question
+     answer - 
+    */
+    var game = this;
+    this.gameState = "select";
+
+    first.emit(IO_EVTS.PAIR_COMPLETE);
+    second.emit(IO_EVTS.PAIR_COMPLETE);
+
+
+    var endGame = function(winner, loser, winMsg, loseMsg) {
         if (winner == first) {
             var winSelect = firstSelect;
             var loseSelect = secondSelect;
@@ -105,15 +128,16 @@ function Game(first, second) {
             var winSelect = secondSelect;
             var loseSelect = firstSelect;
         }
-        gameState = "end";
+        this.gameState = "end";
         var winData = ["win", winSelect, loseSelect, winMsg];
         winner.emit(IO_EVTS.WIN_STATE, winData);
         var loseData = ["lose", loseSelect, winSelect, loseMsg];
         loser.emit(IO_EVTS.WIN_STATE, loseData);
+        clearInterval(pingCheck);
     }
 
     // ping check
-    setInterval(function(){
+    var pingCheck = setInterval(function(){
         var d = new Date();
         // console.log("Date:" + d.getTime());
         // console.log("T1:  " + t1);
@@ -158,31 +182,18 @@ function Game(first, second) {
                                             "You lost! You disconnected!");
         }
     }, pingDelay);
-    /* gamestates:
-     select - waiting for both players to select a character
-     ask - both players thinking of questions
-     wait1 - only first player has asked a question
-     wait2 - only second player has asked a question
-     answer - 
-    */
-    var gameState = "select";
-
-    first.emit(IO_EVTS.PAIR_COMPLETE);
-    second.emit(IO_EVTS.PAIR_COMPLETE);
 
     first.on(IO_EVTS.DING, function(data) {
-        console.log("recieved thing");
         var d = new Date();
         t1 = d.getTime();
     });
     second.on(IO_EVTS.DING, function(data) {
-        console.log("recieved thing");
         var d = new Date();
         t2 = d.getTime();
     });
 
     first.on(IO_EVTS.REMOVE, function(data) {
-        if (gameState != "ask" && gameState != "wait2") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait2") { return; }
         if (!isString(data)) { return; }
         if (firstRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
             if (data == secondSelect) {
@@ -195,7 +206,7 @@ function Game(first, second) {
         }
     });
     second.on(IO_EVTS.REMOVE, function(data) {
-        if (gameState != "ask" && gameState != "wait1") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait1") { return; }
         if (!isString(data)) { return; }
         if (secondRemoved.indexOf(data) < 0 && names.indexOf(data) >= 0) {
             if (data == firstSelect) {
@@ -209,36 +220,36 @@ function Game(first, second) {
     });
 
     first.on(IO_EVTS.ASK, function(data) {
-        if (gameState != "ask" && gameState != "wait2") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait2") { return; }
         if (!isString(data)) { return; }
-        if(firstQ == ""){
+        if(firstQ == null){
             firstQ = data;
-            gameState = "wait1";
-            if(secondQ != ""){
+            game.gameState = "wait1";
+            if(secondQ != null){
                 first.emit(IO_EVTS.ASK, secondQ);
                 second.emit(IO_EVTS.ASK, firstQ);
-                gameState = "answer";
+                game.gameState = "answer";
             }
         }
     });
     second.on(IO_EVTS.ASK, function(data) {
-        if (gameState != "ask" && gameState != "wait1") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait1") { return; }
         if (!isString(data)) { return; }
-        if(secondQ == ""){
+        if(secondQ == null){
             secondQ = data;
-            gameState = "wait2";
-            if(firstQ != ""){
+            game.gameState = "wait2";
+            if(firstQ != null){
                 first.emit(IO_EVTS.ASK, secondQ);
                 second.emit(IO_EVTS.ASK, firstQ);
-                gameState = "answer";
+                game.gameState = "answer";
             }
         }
     });
     first.on(IO_EVTS.GUESS, function(data) {
-        if (gameState != "ask" && gameState != "wait2") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait2") { return; }
         if (!isString(data)) { return; }
         console.log(data + ' ' + secondSelect);
-        gameState = "end";
+        game.gameState = "end";
         if (data == secondSelect) {
             endGame(first, second, "You won! You guessed your opponent's character correctly!",
                                 "You lost! Your opponent guessed your character correctly!");
@@ -248,10 +259,10 @@ function Game(first, second) {
         }
     });
     second.on(IO_EVTS.GUESS, function(data) {
-        if (gameState != "ask" && gameState != "wait1") { return; }
+        if (game.gameState != "ask" && gameState != "wait1") { return; }
         if (!isString(data)) { return; }
         console.log(data + ' ' + firstSelect);
-        gameState = "end";
+        game.gameState = "end";
         if (data == firstSelect) {
             endGame(second, first, "You won! You guessed your opponent's character correctly!",
                                 "You lost! Your opponent guessed your character correctly!");
@@ -261,57 +272,57 @@ function Game(first, second) {
         }
     });
     first.on(IO_EVTS.SELECT, function(data) {
-        if (gameState != "select") { return; }
+        if (game.gameState != "select") { return; }
         if (!isString(data)) { return; }
         if (!names.includes(data)) { return; }
         firstSelect = data;
         if (secondSelect) {
-            gameState = "ask";
+            game.gameState = "ask";
             first.emit(IO_EVTS.SELECT_COMPLETE);
             second.emit(IO_EVTS.SELECT_COMPLETE);
         }
     });
     second.on(IO_EVTS.SELECT, function(data) {
-        if (gameState != "select") { return; }
+        if (game.gameState != "select") { return; }
         if (!isString(data)) { return; }
         if (!names.includes(data)) { return; }
         secondSelect = data;
         if (firstSelect) {
-            gameState = "ask";
+            game.gameState = "ask";
             first.emit(IO_EVTS.SELECT_COMPLETE);
             second.emit(IO_EVTS.SELECT_COMPLETE);
         }
     });
     first.on(IO_EVTS.ANSWER, function(data) {
-        if (gameState != "answer") { return; }
+        if (game.gameState != "answer") { return; }
         if (!isString(data)) { return; }
         firstA = data;
-        if(secondA != ""){
+        if(secondA != null){
             var string1 = "You Asked: " + secondQ + '\n' + "They answered: " + firstA;
             second.emit(IO_EVTS.ANSWER, string1);
             var string2 = "You Asked: " + firstQ + '\n' + "They answered: " + secondA;
             first.emit(IO_EVTS.ANSWER, string2);
-            firstQ = "";
-            firstA = "";
-            secondQ = "";
-            secondA = "";
-            gameState = "ask";
+            firstQ = null;
+            firstA = null;
+            secondQ = null;
+            secondA = null;
+            game.gameState = "ask";
         }
     });
     second.on(IO_EVTS.ANSWER, function(data) {
-        if (gameState != "answer") { return; }
+        if (game.gameState != "answer") { return; }
         if (!isString(data)) { return; }
         secondA = data;
-        if(firstA != ""){
+        if(firstA != null){
             var string1 = "You Asked: " + secondQ + " | " + "They answered: " + firstA;
             second.emit(IO_EVTS.ANSWER, string1);
             var string2 = "You Asked: " + firstQ + " | " + "They answered: " + secondA;
             first.emit(IO_EVTS.ANSWER, string2);
-            firstQ = "";
-            firstA = "";
-            secondQ = "";
-            secondA = "";
-            gameState = "ask";
+            firstQ = null;
+            firstA = null;
+            secondQ = null;
+            secondA = null;
+            game.gameState = "ask";
         }
     });
     first.on(IO_EVTS.CHAT, function(data) {
