@@ -3,13 +3,17 @@ git add [file]  (for all files necessary)
 
 
 -Matchmaking options        []
+-Fix base url               []
 -New Game on GG             []
 -Rematch on GG              []
 -Disconnect Notices         []
+    -Dc before game start   []
 -Timer                      []
 -Help button                []
 -Nudge button               []
--Pic align rematch buttons  []
+-Make highlight on guess/   []
+ remove consistent
+-Pic align rematch buttons  [x]
 -Remove correct person      [x]
 -Chat scrolling             [x]
 -Favicon                    [x]
