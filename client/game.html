@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117931402-1"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date());gtag('config', 'UA-117931402-1');</script>
+
+    <meta charset="utf-8">
+    <title>Avatar Guess Who</title>
+    <link rel="icon" type="image/png" href="/client/eyes6.png">
+    <link rel="stylesheet" href="/client/game.css">
+    <script src="/client/jquery-3.3.1.min.js" charset="utf-8"></script>
+    <script src="/client/firework.js" charset="utf-8"></script>
+    <script src="/client/game.js" charset="utf-8"></script>
+    <script src="/client/socket.io.min.js"></script>
+    <script src="https://use.fontawesome.com/5f4bca6e58.js"></script>
+  </head>
+  <body>
+    <div id="loading">
+      <p>Loading...</p>
+    </div>
+    <div id="center" notif-content="">
+
+      <!--<div class="side-menu">
+        <span id="help-button" class="side-option">
+          <i class="fa fa-question" aria-hidden="true"></i>
+        </span>
+      </div>-->
+
+      <span id="chat-box" class="game-span">
+        <div id="chat-contents"></div>
+        <input id="chat-input">
+      </span>
+
+      <span id="main-span" class="game-span">
+        <span/>
+          <span class="card"><img class="card-img" src="/client/pics/aang.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/katara.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/sokka.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/toph.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/zuko.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/iroh.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card"><img class="card-img" src="/client/pics/azula.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/appa.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/momo.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/admiral-zhao.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/suki.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/king-bumi.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card"><img class="card-img" src="/client/pics/princess-yue.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/jet.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/mai.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/ty-lee.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/ozai.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/roku.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card"><img class="card-img" src="/client/pics/cabbage-man.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/aunt-wu.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/master-pakku.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/jeong-jeong.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/combustion-man.png" alt=""></span>
+          <span class="card"><img class="card-img" src="/client/pics/joo-dee.png" alt=""></span>
+        </span>
+        <span></span>
+        <br />
+        <input class="question-input" type="text" id="to-ask" placeholder="  Ask a question" value="" autofocus>
+      </span>
+      <span class = "game-span" id = "right-game-span">
+        <span class="main-card">
+            <img class="card-img" src="" alt="">
+        </span>
+        <br />
+        <!-- 
+          IMPORTANT: Spacing between closing and opening mini-card tags is
+          purposely omitted to avoid spacing issues
+        -->
+        <span class = "mini-board">
+          <span>
+            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span>
+          </span>
+          <br />
+          <span>
+            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span>
+          </span>
+          <br />
+          <span>
+            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span>
+          </span>
+          <br />
+          <span>
+            <span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span><span class="mini-card">
+            </span>
+          </span>
+          <br />
+          <button class = "fancy-button" id = "ask-button">Ask</button>
+        </span>
+      </span>
+    </div>
+
+    <div id="asked" class="modal centerer">
+      <p id="asked-text">Here is my question, do you want to answer it?</p>
+        <button id="ask-yes" class="fancy-button">Yes</button>
+        <button id="ask-no" class="fancy-button">No</button>
+    </div>
+
+    <div id="waiting" class="modal-container in-center">Waiting for opponent to connect...</div>
+
+    <div id="selecting" class="modal-container in-center">Waiting for opponent to select...</div>
+
+    <div id="select" class="modal-container in-center centerer">
+      <p id="select-text">Select Your Character</p>
+        <span/>
+          <span class="card-select"><img class="card-img" src="/client/pics/aang.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/katara.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/sokka.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/toph.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/zuko.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/iroh.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card-select"><img class="card-img" src="/client/pics/azula.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/appa.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/momo.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/admiral-zhao.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/suki.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/king-bumi.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card-select"><img class="card-img" src="/client/pics/princess-yue.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/jet.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/mai.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/ty-lee.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/ozai.png" alt=""></span>
+          <span class="card-select"><img class="card-img" src="/client/pics/roku.png" alt=""></span>
+        </span>
+        <br />
+        <span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/cabbage-man.png" alt=""></span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/aunt-wu.png" alt=""></span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/master-pakku.png" alt=""></span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/jeong-jeong.png" alt=""></span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/combustion-man.png" alt=""></span>
+          <span class="card-select" style="margin-bottom:0"><img class="card-img" src="/client/pics/joo-dee.png" alt=""></span>
+        </span>
+    </div>
+
+    <div id = "help" class="modal centerer">
+      Welcome to Avatar Guess Who. The goal of the game is to guess the opponent's character before they guess yours.
+      <br><br> Ask a yes or no question by typing it into the text input and clicking "ask". The answer/question will appear after your opponent answers the question. Be careful, the question and answer will not re-appear.
+      <br><br> To toggle a character as eliminated, click his or her icon. In the smaller grid, you can see what characters your opponent has currently toggled.
+      <br><br> When you're ready to guess your opponent's character, click the "guess" button. You can then click a character to guess, or click the guess button again to cancel. Be careful, if you guess wrong, you lose!
+      <br><br>
+      <button id = "help-back" class="fancy-button">Back</button>
+    </div>
+    <div id = "answered" class="modal centerer">
+      <p id = "answered-text">Waiting for the other player to answer your question...</p>
+      <br>
+      <br>
+      <br>
+      <br>
+      <button id="answered-back" class="fancy-button" disabled>Done</button>
+    </div>
+    <div id="winpage">
+      <div id="winmodal" class="modal centerer">
+        <p id="game-over-text"></p>
+
+        <div>
+          <span class="reveal-card">
+            <img class="card-img" src="/client/pics/princess-yue.png" alt="">
+            <br>
+            <p class="reveal-text">hi hi</p>
+          </span>
+          <span class="reveal-card" style="margin-right: 0px">
+            <img class="card-img" src="/client/pics/princess-yue.png" alt="">
+            <br>
+            <p class="reveal-text">hi hi</p>
+          </span>
+        </div>
+
+
+        <span>
+          <button class = "fancy-button" id = "rematch">Rematch</button>
+          <button class = "fancy-button" id = "new-opponent">New Opponent</button>
+        </span>
+      </div>
+      <canvas id="win-cavas"></canvas>
+    </div>
+
+  </body>
+</html>
