@@ -12,20 +12,20 @@ body {
   width: calc(0.90 * 100vw);
   background-image:
     -webkit-linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/pics/avatar_bg.jpg);
+    url(/client/pics/avatar_bg.jpg);
   background-image:
     -moz-linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/pics/avatar_bg.jpg);
+    url(/client/pics/avatar_bg.jpg);
   background-image:
     -o-linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/pics/avatar_bg.jpg);
+    url(/client/pics/avatar_bg.jpg);
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/pics/avatar_bg.jpg);
+    url(/client/pics/avatar_bg.jpg);
 
   //background-image:
     radial-gradient(black 0%, black 20%, transparent 100%),
-    url("/pics/avatar_bg.jpg"); 
+    url("/client/pics/avatar_bg.jpg"); 
   background-repeat: no-repeat;
   background-position: center;
   background-size:cover;
@@ -47,7 +47,7 @@ p {
 
 #selecting, #waiting {
   padding: calc(0.90 * 2.22vw);
-  //visibility: visible;
+  text-align: center;
   margin: auto auto;
   left: 50vw;
   transform: translate(-50%,-50%);
@@ -484,7 +484,7 @@ p {
   transform: translate(-50%, -50%);
 }
 
-#center::before {
+#center::before, #select::before, #selecting::before {
   content: attr(notif-content);
 
   position: absolute;
@@ -493,11 +493,22 @@ p {
   top: calc(0.90 * -2.67vw);
   left: 0;
   font-size: calc(0.90 * 2.22vw);
-  width: calc(0.90 * 94.8vw);
   border-radius: inherit;
 
   color: white;
   background-color: #ffb861;
+}
+
+#center::before {
+  width: calc(0.90 * 94.8vw);
+}
+
+#select::before {
+  width: calc(0.90 * 52.15vw);
+}
+
+#selecting::before {
+  width: 100%;
 }
 
 .in-center {

@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var heapq = require('heapq');
 
 // static files
 app.use('/client', express.static(__dirname + "/client"));
@@ -17,7 +16,7 @@ app.get('/game', function(req, res) {
 
 // index
 app.get('/*', function(req, res) {
-    res.sendFile(__dirname + '/client/index.html');
+    res.sendFile(__dirname + '/client/menu.html');
 });
 
 io.on('connection', pairClient);
@@ -119,6 +118,7 @@ function Game(first, second) {
     first.emit(IO_EVTS.PAIR_COMPLETE);
     second.emit(IO_EVTS.PAIR_COMPLETE);
 
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     var endGame = function(winner, loser, winMsg, loseMsg) {
         if (winner == first) {
@@ -145,7 +145,6 @@ function Game(first, second) {
 
         // manage temporary disconnections
         if (d.getTime() - t1 > timeoutWarning) {
-            console.log("1 dc")
             if (!firstDc) {
                 firstDc = true;
                 second.emit(IO_EVTS.DING, "opp_disconn");
@@ -157,7 +156,6 @@ function Game(first, second) {
             }
         }
         if (d.getTime() - t2 > timeoutWarning) {
-            console.log("2 dc")
             if (!secondDc) {
                 secondDc = true;
                 first.emit(IO_EVTS.DING, "opp_disconn");
@@ -171,15 +169,19 @@ function Game(first, second) {
 
         // manage permanent disconnection
         if (d.getTime() - t1 > pingTimeout) {
-            // console.log(d.getTime() - t1);
-            // console.log("disconnecting");
-            endGame(second, first, "You won! Your opponent disconnected!",
-                                            "You lost! You disconnected!");
+            if (game.gameState == "select") {
+                second.emit(IO_EVTS.DING, "opp_left");
+            } else {
+                endGame(second, first, "You won! Your opponent disconnected!",
+                                                "You lost! You disconnected!");
+            }
         } else if (d.getTime() - t2 > pingTimeout) {
-            // console.log(d.getTime() - t2);
-            // console.log("disconnecting");
-            endGame(first, second, "You won! Your opponent disconnected!",
-                                            "You lost! You disconnected!");
+            if (game.gameState == "select") {
+                    first.emit(IO_EVTS.DING, "opp_left");
+            } else {
+                endGame(first, second, "You won! Your opponent disconnected!",
+                                                "You lost! You disconnected!");
+            }
         }
     }, pingDelay);
 
@@ -259,7 +261,7 @@ function Game(first, second) {
         }
     });
     second.on(IO_EVTS.GUESS, function(data) {
-        if (game.gameState != "ask" && gameState != "wait1") { return; }
+        if (game.gameState != "ask" && game.gameState != "wait1") { return; }
         if (!isString(data)) { return; }
         console.log(data + ' ' + firstSelect);
         game.gameState = "end";
@@ -337,7 +339,11 @@ function Game(first, second) {
     });
     first.on(IO_EVTS.REMATCH, function(data) {
         if(secondRematch && !firstRematch){
-            //rematch
+            var text = "";
+            for (var i = 0; i < 10; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            first.emit(IO_EVTS.REMATCH,text);
+            second.emit(IO_EVTS.REMATCH,text);
         }
         else if(!secondRematch){
             if(firstRematch){
@@ -350,7 +356,11 @@ function Game(first, second) {
     });
     second.on(IO_EVTS.REMATCH, function(data) {
         if (firstRematch && !secondRematch) {
-            //rematch
+            var text = "";
+            for (var i = 0; i < 10; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            first.emit(IO_EVTS.REMATCH,text);
+            second.emit(IO_EVTS.REMATCH,text);
         } else if (!firstRematch) {
             if (secondRematch) {
                 first.emit(IO_EVTS.REMATCH,"cancel");

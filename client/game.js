@@ -106,8 +106,8 @@ function chatM(){
 /*
 Requests a rematch.
 
-Toggles buttonf for rematch/cancel rematch,
-and sends to server
+Toggles button for rematch/cancel rematch,
+and sends to .
 */
 function rematch(){
   var a = $("#rematch").text();
@@ -117,6 +117,15 @@ function rematch(){
     $("#rematch").text("Rematch");
   }
   rematchServer();
+}
+
+/*
+Requests a new opponent.
+
+Sends the player to a random game.
+*/
+function newOpponent() {
+  window.location.href = baseURL;  
 }
 
 /*
@@ -136,11 +145,11 @@ updated, and the server is notified.
 function addDeleteListener() {
  $(".card-delete").click(function(event) {
     var curr = $(this);
+    while (!curr.hasClass("card")) { curr = curr.parent(); }
     var name = findCardName(curr);
     console.log("You Deleted: " + name);
 
     // hide card options (this or the next block is probably extraneous)
-    while (!curr.hasClass("card")) { curr = curr.parent(); }
     curr.find(".option-div").css("visibility", "hidden");
     curr.find(".remove-div").css("visibility", "hidden");
     curr.css("visibility", "hidden");
@@ -356,11 +365,20 @@ function startChatScroller() {
       }
   });
   scroller.observe(chatbox, {childList: true});
-}
 
+  
+}
 // "main" method
 $(document).ready(function() {
   $("#ask-button").click(askQ);
+  
+  var copyUrl = window.location.href;
+  var urlEnd = copyUrl.slice(copyUrl.indexOf("/game"));
+  if (urlEnd.replace(/\//g,"") != "game") {
+    console.log("playing with friend");
+    $("#waiting").html("Send a friend this URL:<br />" + copyUrl);
+  }
+
   $("#waiting").css("visibility", "visible");
   $('#to-ask').keypress(function(e){
     if (e.keyCode==13) {
@@ -373,6 +391,7 @@ $(document).ready(function() {
     }
   });
   $("#rematch").click(rematch);
+  $("#new-opponent").click(newOpponent);
   startCards();
   startSideBar();
   startChatScroller();
@@ -480,8 +499,13 @@ function initIO() {
       console.log("rematch thing");
       if(data == "request"){
         $("#game-over-text").text(endText + " Your friend is requesting a rematch!");
-      } else {
+      } else if (data == "cancel") {
         $("#game-over-text").text(endText + " Request has been cancelled.");
+      } else{
+        var a = window.location.href;
+        a = a.substr(0,a.lastIndexOf('game'));
+        console.log(a);
+        window.location.href = a + "game/" + data; 
       }
     });
 
@@ -489,10 +513,16 @@ function initIO() {
     socket.on(IO_EVTS.DING, function(data) {
       if (data == "opp_disconn") {
         $("#center").attr("notif-content", "Opponent Reconnecting...");
+        $("#select").attr("notif-content", "Opponent Reconnecting...");
+        $("#selecting").attr("notif-content", "Opponent Reconnecting...");
+      } else if (data == "opp_left") {
+        $("#select").attr("notif-content", "Opponent Left");
+        $("#selecting").attr("notif-content", "Opponent Left");
       } else if (data == "opp_reconn") {
         $("#center").attr("notif-content", "");
+        $("#select").attr("notif-content", "");
+        $("#selecting").attr("notif-content", "");
       }
-      
     });
 }
 
