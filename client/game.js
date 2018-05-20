@@ -13,11 +13,11 @@ var cardInsides =
   <button class="card-option fancy-button guess-button">Guess</button>
 </div>
 <div class="card-option-holder guess-div">
-  <button class="card-option fancy-button card-confirm">Guess?</button>
+  <button class="card-option card-confirm">Guess?</button>
   <button class="card-option fancy-button card-choose">Guess</button>
 </div>
 <div class="card-option-holder remove-div">
-  <button class="card-option fancy-button card-confirm">Remove?</button>
+  <button class="card-option card-confirm">Remove?</button>
   <button class="card-option fancy-button card-delete">Remove</button>
 </div>
 `;
@@ -73,6 +73,57 @@ if (b.includes("/")) {
 } else {
 	baseURL = a;
 }
+
+// "main" method
+$(document).ready(function() {
+  $("#ask-button").click(askQ);
+  
+  var copyUrl = window.location.href;
+  var urlEnd = copyUrl.slice(copyUrl.indexOf("/game"));
+  if (urlEnd.replace(/\//g,"") != "game") {
+    console.log("playing with friend");
+    $("#waiting").html("Send a friend this URL:<br />" + copyUrl);
+  }
+
+  $("#join-button").click(function() {
+    $("#waiting").css("visibility", "visible");
+    $("#join").css("visibility", "hidden");
+    /*
+    initIO() used to be in window on load; but that
+    event fires before document ready when certain
+    methods are used to redirect pages. That caused
+    side effects.
+    */
+    initIO();
+    window.setInterval(dingServer, pingDelay);
+  });
+
+  $('#to-ask').keypress(function(e){
+    if (e.keyCode==13) {
+      $('#ask-button').click();
+    }
+  });
+  $('#chat-input').keypress(function(e){
+    if (e.keyCode == 13) {
+      chatM();
+    }
+  });
+  $("#rematch").click(rematch);
+  $("#new-opponent").click(newOpponent);
+  startCards();
+  startSideBar();
+  startChatScroller();
+});
+
+/*
+Handle loading screen.
+
+Window on load fires once images have loaded.
+*/
+$(window).on("load", function() {
+  console.log("hiding loadscreen");
+  $("#loading").css("visibility", "hidden");
+});
 
 /*
 Asks the clients question.
@@ -370,55 +421,7 @@ function startChatScroller() {
       }
   });
   scroller.observe(chatbox, {childList: true});
-
-  
 }
-// "main" method
-$(document).ready(function() {
-  $("#ask-button").click(askQ);
-  
-  var copyUrl = window.location.href;
-  var urlEnd = copyUrl.slice(copyUrl.indexOf("/game"));
-  if (urlEnd.replace(/\//g,"") != "game") {
-    console.log("playing with friend");
-    $("#waiting").html("Send a friend this URL:<br />" + copyUrl);
-  }
-
-  $("#waiting").css("visibility", "visible");
-  $('#to-ask').keypress(function(e){
-    if (e.keyCode==13) {
-      $('#ask-button').click();
-    }
-  });
-  $('#chat-input').keypress(function(e){
-    if (e.keyCode == 13) {
-      chatM();
-    }
-  });
-  $("#rematch").click(rematch);
-  $("#new-opponent").click(newOpponent);
-  startCards();
-  startSideBar();
-  startChatScroller();
-
-  // This used to be in window on load;
-  // however that event fires before 
-  // document ready when certain methods
-  // are used to redirect pages. That
-  // caused side effects.
-  initIO();
-  window.setInterval(dingServer, pingDelay);
-});
-
-/*
-Handle loading screen.
-
-Window on load fires once images have loaded.
-*/
-$(window).on("load", function() {
-  console.log("hiding loadscreen");
-  $("#loading").css("visibility", "hidden");
-});
 
 // connect to server
 function initIO() {
