@@ -484,6 +484,7 @@ function initIO() {
 
     // listen for opponent joined game
     socket.on(IO_EVTS.PAIR_COMPLETE, function() {
+      console.log("pair complete");
       $("#waiting").css("visibility", "hidden");
       $("#select").css("visibility", "visible");
     });
