@@ -6,7 +6,7 @@
     <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date());gtag('config', 'UA-117931402-1');</script>
 
     <meta charset="utf-8">
-    <title>Avatar Guess Who</title>
+    <title>Avatar Guess</title>
     <link rel="icon" type="image/png" href="/client/eyes6.png">
     <link rel="stylesheet" href="/client/game.css">
     <script src="/client/jquery-3.3.1.min.js" charset="utf-8"></script>
@@ -20,12 +20,6 @@
       <p>Loading...</p>
     </div>
     <div id="center" notif-content="">
-
-      <!--<div class="side-menu">
-        <span id="help-button" class="side-option">
-          <i class="fa fa-question" aria-hidden="true"></i>
-        </span>
-      </div>-->
 
       <span id="chat-box" class="game-span">
         <div id="chat-contents"></div>
@@ -127,17 +121,21 @@
       </span>
     </div>
 
-    <div id="asked" class="modal centerer">
+    <div id="asked" class="modal">
       <p id="asked-text">Here is my question, do you want to answer it?</p>
         <button id="ask-yes" class="fancy-button">Yes</button>
         <button id="ask-no" class="fancy-button">No</button>
+    </div>
+
+    <div id="join" class="menu-div">
+      <div id="join-button" class="fancy-button menu-button">Join Game</div>
     </div>
 
     <div id="waiting" class="modal-container in-center">Waiting for opponent to connect...</div>
 
     <div id="selecting" class="modal-container in-center" notif-content="">Waiting for opponent to select...</div>
 
-    <div id="select" class="modal-container in-center centerer" notif-content="">
+    <div id="select" class="modal-container in-center" notif-content="">
       <p id="select-text">Select Your Character</p>
         <span/>
           <span class="card-select"><img class="card-img" src="/client/pics/aang.png" alt=""></span>
@@ -176,7 +174,7 @@
         </span>
     </div>
 
-    <div id = "help" class="modal centerer">
+    <div id = "help" class="modal">
       Welcome to Avatar Guess Who. The goal of the game is to guess the opponent's character before they guess yours.
       <br><br> Ask a yes or no question by typing it into the text input and clicking "ask". The answer/question will appear after your opponent answers the question. Be careful, the question and answer will not re-appear.
       <br><br> To toggle a character as eliminated, click his or her icon. In the smaller grid, you can see what characters your opponent has currently toggled.
@@ -184,7 +182,7 @@
       <br><br>
       <button id = "help-back" class="fancy-button">Back</button>
     </div>
-    <div id = "answered" class="modal centerer">
+    <div id = "answered" class="modal">
       <p id = "answered-text">Waiting for the other player to answer your question...</p>
       <br>
       <br>
@@ -193,7 +191,7 @@
       <button id="answered-back" class="fancy-button" disabled>Done</button>
     </div>
     <div id="winpage">
-      <div id="winmodal" class="modal centerer">
+      <div id="winmodal" class="modal">
         <p id="game-over-text"></p>
 
         <div>
@@ -217,6 +215,7 @@
       </div>
       <canvas id="win-cavas"></canvas>
     </div>
+
 
   </body>
 </html>

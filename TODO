@@ -2,18 +2,20 @@ To push changes:
 git add [file]  (for all files necessary)
 
 ---------Next Release---------
+-Timer                      []
+-Help button                []
+-Nudge button               []
+-Make highlight on guess/   [x]
+ remove consistent
+-Confirm to join            [x]
+------------Later------------
+
+-----------Finished-----------
 -Matchmaking options        [x]
 -Disconnect Notices         [x]
     -Dc before game start   [x]
 -New Game on GG             [x]
 -Rematch on GG              [x]
-------------Later------------
--Timer                      []
--Help button                []
--Nudge button               []
--Make highlight on guess/   []
- remove consistent
------------Finished-----------
 -Fix base url               [x]
 -Pic align rematch buttons  [x]
 -Remove correct person      [x]

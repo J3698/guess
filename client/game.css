@@ -37,14 +37,6 @@ p {
   margin: 0;
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: calc(0.90 * 100vw);
-  height: 100vh;
-}
-
 #selecting, #waiting {
   padding: calc(0.90 * 2.22vw);
   text-align: center;
@@ -54,11 +46,7 @@ p {
   font-size: calc(0.90 * 3vw);
 }
 
-.waiting-text {
-  font-size: calc(0.90 * 3vw);
-}
-
-.modal, .full-modal, .modal-container {
+.modal, .modal-container {
   position: absolute;
   visibility: hidden;
   top: 50%;
@@ -70,35 +58,22 @@ p {
   width: calc(0.90 * 94.8vw);
   height: calc(0.90 * 40.23vw);
 
-  // background-color: rgba(0, 0, 0, 0.8);
   color: var(--button-bg);
 }
 
 .modal-container {
   background-color: rgba(0, 0, 0, 0.5);
   padding: calc(0.90 * 0.9vw);
-  // visibility: inherit;
   display:table;
   table-layout: auto;
   width: auto;
   height: auto;
-  //width: fit-content;
-  //height: fit-content;
-}
-
-.full-modal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
 }
 
 .modal {
-  left: auto;
-  right: calc(0.90 * 8vw);
+  right: calc(0.90 * -22.1vw);
   width: calc(0.90 * 72.7vw);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 #main-span {
@@ -112,6 +87,7 @@ p {
   width: calc(0.90 * 11.44vw);
   height: calc(0.90 * 4.021vw);
   font-size: calc(0.90 * 3vw);
+  cursor: pointer;
 }
 
 .fancy-button:hover {
@@ -156,7 +132,6 @@ p {
 
   height: calc(0.90 * 38.43vw);
   width: calc(0.90 * 93vw);
-  // width: calc(0.90 * 85vw);
 
   padding: calc(0.90 * 0.9vw);
   font-size:0;
@@ -177,24 +152,6 @@ p {
   pointer-events: none;
 }
 
-.side-option {
-  display: inline-block;
-
-  height: calc(0.90 * 3.76vw);
-  width: calc(0.90 * 3.76vw);
-
-  margin-bottom: calc(0.90 * 0.45vw);
-
-  background-color: var(--button-bg);
-  color: var(--button-fg);
-
-  font-size: calc(0.90 * 2.8vw);
-  text-align: center;
-  line-height: calc(0.90 * 4.021vw);
-}
-.side-option:hover {
-  background-color: rgba(255, 255, 255, 0.65);
-}
 .card {
   display: inline-block;
 
@@ -222,13 +179,14 @@ p {
 
   height: calc(0.90 * 8.05vw);
   width: calc(0.90 * 8.05vw);
+  margin-bottom: calc(0.90 * 0.4vw);
 
   background-color: rgba(0, 0, 0, 0.5);
 
   transform: scale(1);
   z-index: 0;
 
-  margin-bottom: calc(0.90 * 0.4vw);
+  cursor: pointer;
 }
 
 .card-select:not(:last-child) {
@@ -261,6 +219,7 @@ p {
 
 .card-confirm {
   background-color: rgba(255, 255, 255, 0.2);
+  border: none;
 }
 
 .card-confirm:hover {
@@ -321,10 +280,6 @@ p {
   transform: scale(0.8);
 }
 
-.modal {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
 #winpage {
   visibility: hidden;
 }
@@ -337,9 +292,6 @@ p {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.mini-board {
 }
 
 .question-input {
@@ -367,7 +319,7 @@ p {
   width: calc(0.90 * 20.55vw);
 }
 
-.centerer {
+#asked, #select, #help, #answered, #winmodal {
   text-align: center;
 }
 
@@ -378,14 +330,7 @@ p {
   margin-top: calc(0.90 * 0.5vw);
 }
 
-#asked-text {
-  left: 50%;
-  top: 43%;
-  transform: translate(-50%, -50%);
-  position: relative;
-}
-
-#answered-text {
+#answered-text, #asked-text {
   left: 50%;
   top: 43%;
   transform: translate(-50%, -50%);
@@ -516,4 +461,19 @@ p {
   //margin: auto auto;
   left: 50vw;
   transform: translateX(-50%);
+}
+
+.menu-div {
+  position: absolute;
+  left: 50vw;
+  transform: translate(-50%,-50%);
+  top: 50vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: calc(0.90 * 0.9vw);    text-align: center;
+}
+
+#join-button {
+  width: auto;
+  height: auto;
+  padding: 0.5vw;
 }
