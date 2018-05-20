@@ -30,7 +30,12 @@ var names = ["aang", "katara", "sokka", "toph", "zuko", "iroh", "azula",
 /* number of characters in the game */
 var numCharacters = 24;
 
-/* how often to ping the server (in ms) */
+/*
+how often to ping the server (in ms)
+
+This number needs to be matched by
+the server.
+*/
 var pingDelay = 500;
 
 /* track characters removed by client*/
@@ -395,19 +400,24 @@ $(document).ready(function() {
   startCards();
   startSideBar();
   startChatScroller();
+
+  // This used to be in window on load;
+  // however that event fires before 
+  // document ready when certain methods
+  // are used to redirect pages. That
+  // caused side effects.
+  initIO();
+  window.setInterval(dingServer, pingDelay);
 });
 
 /*
 Handle loading screen.
 
 Window on load fires once images have loaded.
-The ping should be better placed.
 */
 $(window).on("load", function() {
   console.log("hiding loadscreen");
-  initIO();
   $("#loading").css("visibility", "hidden");
-  window.setInterval(dingServer, pingDelay); //every .5 seconds (needs to be same as server)
 });
 
 // connect to server
